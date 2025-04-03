@@ -1,0 +1,34 @@
+name: baato_maps
+description: "A new Flutter package project."
+version: 0.0.1
+publish_to: none
+homepage:
+
+environment:
+  sdk: ^3.7.0
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  maplibre_gl: ^0.20.0
+  baato_api:
+    git:
+      url: https://github.com/baato/baato-flutter.git
+      ref: main
+  http: ^1.3.0
+  location: ^8.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+flutter:
+  assets:
+    - assets/markers/
+    - assets/styles/breeze.json
+    - assets/sprites/breeze/breeze.png
+    - assets/sprites/breeze/breeze.json
+    - assets/sprites/breeze/breeze@2x.png
+    - assets/sprites/breeze/breeze@2x.json
+    - assets/fonts/Roboto/
