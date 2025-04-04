@@ -89,7 +89,9 @@ class _MapScreenState extends State<MapScreen> {
       body:
           _currentStyle.isNotEmpty
               ? FlutterBottomSheet(
-                body: BaatoMapView(),
+                body: BaatoMapView(
+                  initialPosition: BaatoCoordinate(27.7172, 85.3240),
+                ),
                 controller: _sheetController,
                 builder: (context, type) {
                   if (type is SearchBottomSheet) {

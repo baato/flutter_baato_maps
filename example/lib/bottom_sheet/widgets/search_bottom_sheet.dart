@@ -112,8 +112,11 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               }
             },
             onPlaceDetailsRetrieved: (place) {
-              BaatoMapView.mapController.moveTo(
-                LatLng(place.centroid.latitude, place.centroid.longitude),
+              BaatoMapView.mapController.cameraManager?.moveTo(
+                BaatoCoordinate(
+                  place.centroid.latitude,
+                  place.centroid.longitude,
+                ),
               );
               widget.controller.updateBottomSheetType(
                 PlaceDetailBottomSheet(
@@ -153,29 +156,37 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
                   },
                   "properties": {"fill": "#088", "fill-opacity": 0.8},
                 };
-                BaatoMapView.mapController.addGeoJson(kathmanduGeoJsonPolygon);
+                // BaatoMapView.mapController.addGeoJson(kathmanduGeoJsonPolygon);
               },
             ),
             IconButton(
               icon: Icon(Icons.timeline),
               onPressed: () {
                 // Add a polyline to the map
-                BaatoMapView.mapController.addPolyline([
-                  LatLng(27.7172, 85.3240),
-                  LatLng(27.7182, 85.3250),
-                  LatLng(27.7192, 85.3260),
-                ]);
+                BaatoMapView.mapController.shapeManager.addLine(
+                  LineOptions(
+                    geometry: [
+                      LatLng(27.7172, 85.3240),
+                      LatLng(27.7182, 85.3250),
+                      LatLng(27.7192, 85.3260),
+                    ],
+                  ),
+                );
               },
             ),
             IconButton(
               icon: Icon(Icons.linear_scale),
               onPressed: () {
                 // Add a line to the map
-                BaatoMapView.mapController.addPolyline([
-                  LatLng(27.7172, 85.3240),
-                  LatLng(27.7182, 85.3250),
-                  LatLng(27.7192, 85.3260),
-                ]);
+                BaatoMapView.mapController.shapeManager.addLine(
+                  LineOptions(
+                    geometry: [
+                      LatLng(27.7172, 85.3240),
+                      LatLng(27.7182, 85.3250),
+                      LatLng(27.7192, 85.3260),
+                    ],
+                  ),
+                );
               },
             ),
           ],

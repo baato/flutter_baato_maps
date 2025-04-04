@@ -58,7 +58,7 @@ class _RouteDetailBottomSheetWidgetState
         _selectedMode,
       );
 
-      final route = await BaatoMap.api.direction.getRoutes(
+      final route = await Baato.api.direction.getRoutes(
         startCoordinate: BaatoCoordinate(
           _startCoordinates!.latitude,
           _startCoordinates!.longitude,
@@ -68,8 +68,9 @@ class _RouteDetailBottomSheetWidgetState
           _endCoordinates!.longitude,
         ),
         mode: BaatoDirectionMode.car,
+        decodePolyline: true,
       );
-      widget.mapController.drawRoute(route);
+      widget.mapController.routeManager.drawRoute(route);
     }
   }
 
