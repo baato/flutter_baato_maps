@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:baato_api/baato_api.dart';
-import 'package:baato_maps/src/baato_map.dart';
+import 'package:baato_maps/src/baato.dart';
 import 'package:baato_maps/src/widgets/baato_place_search_dropdown.dart';
 import 'package:flutter/material.dart';
 
@@ -152,7 +152,7 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
   Future<List<BaatoSearchPlace>> _searchPlaces(String query) async {
     if (query.isEmpty) return [];
     try {
-      final response = await BaatoMap.api.place.search(
+      final response = await Baato.api.place.search(
         query,
         type: widget.type,
         limit: widget.limit,
@@ -171,7 +171,7 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
     if (widget.onPlaceDetailsRetrieved == null) return;
 
     try {
-      final placeResponse = await BaatoMap.api.place.getDetail(placeId);
+      final placeResponse = await Baato.api.place.getDetail(placeId);
       if (placeResponse.data != null && placeResponse.data!.isNotEmpty) {
         widget.onPlaceDetailsRetrieved!(placeResponse.data!.first);
       }

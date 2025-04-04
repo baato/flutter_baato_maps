@@ -38,13 +38,13 @@ class ServerManager {
           fileContent = jsonEncode(breezeStyle);
         } else if (requestPath == '/sprites/breeze/breeze.json') {
           fileContent = await _loadAsset(
-            'packages/baato_maps/assets/sprites/breeze/breeze.json',
+            'packages/baato_maps/lib/assets/sprites/breeze/breeze.json',
           );
         } else if (requestPath == '/sprites/breeze/breeze.png') {
           fileContent = null; // We'll handle binary data separately
         } else if (requestPath == '/sprites/breeze/breeze@2x.json') {
           fileContent = await _loadAsset(
-            'packages/baato_maps/assets/sprites/breeze/breeze@2x.json',
+            'packages/baato_maps/lib/assets/sprites/breeze/breeze@2x.json',
           );
         } else if (requestPath == '/sprites/breeze/breeze@2x.png') {
           fileContent = null; // We'll handle binary data separately
@@ -70,7 +70,7 @@ class ServerManager {
           // Handle binary content (e.g., PNG, PBF)
           if (requestPath == '/sprites/breeze/breeze.png') {
             final bytes = await _loadAssetBytes(
-              'packages/baato_maps/assets/sprites/breeze/breeze.png',
+              'packages/baato_maps/lib/assets/sprites/breeze/breeze.png',
             );
             if (bytes != null) {
               request.response.headers.contentType = ContentType.binary;
@@ -89,7 +89,7 @@ class ServerManager {
             }
           } else if (requestPath == '/sprites/breeze/breeze@2x.png') {
             final bytes = await _loadAssetBytes(
-              'packages/baato_maps/assets/sprites/breeze/breeze@2x.png',
+              'packages/baato_maps/lib/assets/sprites/breeze/breeze@2x.png',
             );
             if (bytes != null) {
               request.response.headers.contentType = ContentType.binary;
@@ -109,7 +109,7 @@ class ServerManager {
           } else if (requestPath.startsWith('/fonts/Roboto/')) {
             final fileName = path.basename(requestPath);
             final bytes = await _loadAssetBytes(
-              'packages/baato_maps/assets/fonts/Roboto/$fileName',
+              'packages/baato_maps/lib/assets/fonts/Roboto/$fileName',
             );
             if (bytes != null) {
               request.response.headers.contentType = ContentType(

@@ -1,5 +1,5 @@
 enum BaatoMarker {
-  baatoDefault('packages/baato_maps/assets/markers/baato_marker.png');
+  baatoDefault('packages/baato_maps/lib/assets/markers/baato_marker.png');
 
   final String assetPath;
 

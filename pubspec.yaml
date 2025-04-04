@@ -25,10 +25,10 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 flutter:
   assets:
-    - assets/markers/
-    - assets/styles/breeze.json
-    - assets/sprites/breeze/breeze.png
-    - assets/sprites/breeze/breeze.json
-    - assets/sprites/breeze/breeze@2x.png
-    - assets/sprites/breeze/breeze@2x.json
-    - assets/fonts/Roboto/
+    - lib/assets/markers/
+    - lib/assets/styles/breeze.json
+    - lib/assets/sprites/breeze/breeze.png
+    - lib/assets/sprites/breeze/breeze.json
+    - lib/assets/sprites/breeze/breeze@2x.png
+    - lib/assets/sprites/breeze/breeze@2x.json
+    - lib/assets/fonts/Roboto/
