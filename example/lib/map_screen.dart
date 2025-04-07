@@ -17,18 +17,18 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late ServerManager _serverManager;
-  String _currentStyle = '';
-  bool _isServerRunning = false;
+  String _currentStyle = 'd';
+  bool _isServerRunning = true;
 
   @override
   void initState() {
     super.initState();
     _serverManager = ServerManager();
     // Set the context after the widget is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _serverManager.setContext(context);
-      _startServerAndLoadStyle();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   _serverManager.setContext(context);
+    //   _startServerAndLoadStyle();
+    // });
   }
 
   @override

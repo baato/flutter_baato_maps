@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:baato_maps/baato_maps.dart';
+import 'package:baato_maps/src/map/map_configuration.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
@@ -32,9 +33,9 @@ class ServerManager {
         String? fileContent;
         if (requestPath == '/styles/breeze.json') {
           var breezeStyle = styleMap;
-          breezeStyle['sources']['qvez6ula1']['tiles'] = [
-            "https://api.baato.io/api/v1/maps/{z}/{x}/{y}.pbf?key=bpk.TqpOIK5KflKR_zEI0ONEVdCZmwmfMye9i67nAjsGlMgQ",
-          ];
+          // breezeStyle['sources']['qvez6ula1']['tiles'] = [
+          //   "https://api.baato.io/api/v1/maps/{z}/{x}/{y}.pbf?key=${BaatoMapConfig.apiKey}",
+          // ];
           fileContent = jsonEncode(breezeStyle);
         } else if (requestPath == '/sprites/breeze/breeze.json') {
           fileContent = await _loadAsset(

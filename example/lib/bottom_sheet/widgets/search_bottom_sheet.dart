@@ -81,6 +81,9 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final topPadding = MediaQuery.of(context).padding.top;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -129,6 +132,10 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
                   ),
                 ),
               );
+              // Adjust bottom sheet position when keyboard is visible
+              if (MediaQuery.of(context).viewInsets.bottom > 0) {
+                widget.controller.snapToPosition(BottomSheetPosition.base);
+              }
             },
           ),
         ),

@@ -14,7 +14,7 @@ dependencies:
   baato_api:
     git:
       url: https://github.com/baato/baato-flutter.git
-      ref: main
+      ref: oldsdk
   http: ^1.3.0
   location: ^8.0.0
 
