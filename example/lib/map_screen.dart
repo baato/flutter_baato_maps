@@ -53,6 +53,8 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _loadLocalStyle() async {
     try {
       const styleUrl = 'http://localhost:8080/styles/breeze.json';
+      // const styleUrl =
+      //     'https://api.maptiler.com/maps/0196139b-bc15-7a93-960c-eb9ae7a90814/style.json?key=XNth7tPtxV7h9PHjlJHR'; //'http://localhost:8080/styles/breeze.json';
       setState(() {
         _currentStyle = styleUrl;
       });
@@ -90,6 +92,8 @@ class _MapScreenState extends State<MapScreen> {
           ? FlutterBottomSheet(
               body: BaatoMapView(
                 initialPosition: BaatoCoordinate(27.7172, 85.3240),
+                styleUrl:
+                    "https://tileboundaries.baato.io/admin_boundary/baato_lite.json",
               ),
               controller: _sheetController,
               builder: (context, type) {

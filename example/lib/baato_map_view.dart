@@ -27,7 +27,7 @@ class BaatoMapView extends StatelessWidget {
           ),
           initialZoom: initialZoom,
           initialStyle: styleUrl ?? "http://localhost:8080/styles/breeze.json",
-          myLocationEnabled: myLocationEnabled,
+          myLocationEnabled: false,
           onMapCreated: (controller) {
             BaatoMapView.mapController = controller;
           },

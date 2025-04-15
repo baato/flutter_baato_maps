@@ -33,9 +33,9 @@ class ServerManager {
         String? fileContent;
         if (requestPath == '/styles/breeze.json') {
           var breezeStyle = styleMap;
-          breezeStyle['sources']['qvez6ula1']['tiles'] = [
-            "https://api.baato.io/api/v1/maps/{z}/{x}/{y}.pbf?key=${BaatoMapConfig.instance.apiKey}",
-          ];
+          // breezeStyle['sources']['qvez6ula1']['tiles'] = [
+          //   "https://api.baato.io/api/v1/maps/{z}/{x}/{y}.pbf?key=${BaatoMapConfig.instance.apiKey}",
+          // ];
           fileContent = jsonEncode(breezeStyle);
         } else if (requestPath == '/sprites/breeze/breeze.json') {
           fileContent = await _loadAsset(

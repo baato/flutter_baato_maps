@@ -1,3 +1,4 @@
+import 'package:example/main_web.dart';
 import 'package:example/map_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baato_maps/baato_maps.dart';

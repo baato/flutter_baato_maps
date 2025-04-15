@@ -25,8 +25,6 @@ class BaatoMapFeature {
     Map<String, dynamic> mapFeature,
     BaatoCoordinate? userLocation,
   ) {
-    print("mapFeature");
-    print(mapFeature);
     final attributes = mapFeature['properties'] as Map<String, dynamic>?;
     final coordinate = BaatoCoordinate(
       mapFeature['geometry']['coordinates'][1],
@@ -79,8 +77,7 @@ class BaatoMapFeature {
     const double earthRadius = 6371000;
     final double dLat = _degreesToRadians(end.latitude - start.latitude);
     final double dLng = _degreesToRadians(end.longitude - start.longitude);
-    final double a =
-        sin(dLat / 2) * sin(dLat / 2) +
+    final double a = sin(dLat / 2) * sin(dLat / 2) +
         cos(_degreesToRadians(start.latitude)) *
             cos(_degreesToRadians(end.latitude)) *
             sin(dLng / 2) *

@@ -16,9 +16,9 @@ class BaatoMapWidget extends StatefulWidget {
   final bool enableLayerDetection;
   final Function(BaatoMapController)? onMapCreated;
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
-  onTap;
+      onTap;
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
-  onLongPress;
+      onLongPress;
 
   const BaatoMapWidget({
     super.key,
@@ -74,44 +74,45 @@ class _BaatoMapWidgetState extends State<BaatoMapWidget> {
           initialCameraPosition: cameraPosition,
           styleString: style,
           myLocationEnabled: widget.myLocationEnabled,
-          trackCameraPosition: true,
           onMapCreated: (controller) async {
             await _baatoController.setController(controller);
-            if (widget.enableLayerDetection) {
-              await findPOILayers();
-            }
+            // if (widget.enableLayerDetection) {
+            //   await findPOILayers();
+            // }
             widget.onMapCreated?.call(_baatoController);
           },
           onMapClick: (point, latLng) async {
-            final List<BaatoMapFeature> features =
-                widget.enableLayerDetection ? (await _queryPOI(point)) : [];
-            widget.onTap?.call(
-              point,
-              BaatoCoordinate(latLng.latitude, latLng.longitude),
-              features,
-            );
+            // final List<BaatoMapFeature> features =
+            //     widget.enableLayerDetection ? (await _queryPOI(point)) : [];
+            // widget.onTap?.call(
+            //   point,
+            //   BaatoCoordinate(latLng.latitude, latLng.longitude),
+            //   [],
+            // );
           },
           onMapLongClick: (point, latLng) async {
-            final List<BaatoMapFeature> features =
-                widget.enableLayerDetection ? await _queryPOI(point) : [];
-            widget.onLongPress?.call(
-              point,
-              BaatoCoordinate(latLng.latitude, latLng.longitude),
-              features,
-            );
+            // final List<BaatoMapFeature> features =
+            //     widget.enableLayerDetection ? await _queryPOI(point) : [];
+            // widget.onLongPress?.call(
+            //   point,
+            //   BaatoCoordinate(latLng.latitude, latLng.longitude),
+            //   [],
+            // );
           },
           onCameraIdle: () {
-            final position = _baatoController.rawController?.cameraPosition;
-            if (position != null) {
-              _baatoController.cameraManager?.setLastCameraPosition(
-                BaatoCameraPosition(
-                  target: BaatoCoordinate(
-                    position.target.latitude,
-                    position.target.longitude,
-                  ),
-                ),
-              );
-            }
+            // final position = _baatoController.rawController?.cameraPosition;
+            // if (position != null) {
+            //   _baatoController.cameraManager?.setLastCameraPosition(
+            //     BaatoCameraPosition(
+            //       target: BaatoCoordinate(
+            //         position.target.latitude,
+            //         position.target.longitude,
+            //       ),
+            //     ),
+            //   );
+            // }
+
+            _baatoController.rawController?.invalidateAmbientCache();
           },
         );
       },
@@ -128,12 +129,11 @@ class _BaatoMapWidgetState extends State<BaatoMapWidget> {
       null,
     );
 
-    final features =
-        mapFeatures
-            .map(
-              (e) => BaatoMapFeature.fromMapFeature(e, null),
-            ) //TODO: Add user location
-            .toList();
+    final features = mapFeatures
+        .map(
+          (e) => BaatoMapFeature.fromMapFeature(e, null),
+        ) //TODO: Add user location
+        .toList();
 
     return features;
   }
@@ -143,19 +143,17 @@ class _BaatoMapWidgetState extends State<BaatoMapWidget> {
     final mapLibreController = _baatoController.rawController;
     if (mapLibreController == null) return;
 
-    List<String> layers =
-        (await mapLibreController.getLayerIds())
-            .map((e) => e.toString())
-            .toList();
+    List<String> layers = (await mapLibreController.getLayerIds())
+        .map((e) => e.toString())
+        .toList();
 
-    List<String> poiLayers =
-        layers
-            .where(
-              (layer) => widget.poiLayerContainIds.any(
-                (text) => layer.startsWith(text),
-              ),
-            )
-            .toList();
+    List<String> poiLayers = layers
+        .where(
+          (layer) => widget.poiLayerContainIds.any(
+            (text) => layer.startsWith(text),
+          ),
+        )
+        .toList();
 
     if (poiLayers.isEmpty) {
       return;

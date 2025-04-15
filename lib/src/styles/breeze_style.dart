@@ -10,11 +10,6 @@ Map<String, dynamic> styleMap = {
     "openmaptiles:mapbox:owner": "openmaptiles",
   },
   "sources": {
-    "pp31tp74k": {
-      "data":
-          "https://baatocdn.sgp1.cdn.digitaloceanspaces.com/boundaries/lite/ProtectedArea.json",
-      "type": "geojson",
-    },
     "Boundary-Province": {
       "data":
           "https://baatocdn.sgp1.cdn.digitaloceanspaces.com/boundaries/lite/province_adm_lv_3.json",
@@ -41,12 +36,12 @@ Map<String, dynamic> styleMap = {
           "https://baatocdn.sgp1.cdn.digitaloceanspaces.com/boundaries/ProtectedPoints.json.gz",
       "type": "geojson",
     },
-    "qvez6ula1": {
-      "tiles": ["http://localhost:8080/tiles"],
-      "maxzoom": 14,
-      "type": "vector",
-      "minzoom": 0,
-    },
+    // "qvez6ula1": {
+    //   "tiles": ["http://localhost:8080/tiles"],
+    //   "maxzoom": 14,
+    //   "type": "vector",
+    //   "minzoom": 0,
+    // },
     "buildings": {
       "tiles": [
         "https://baatooffline.sgp1.cdn.digitaloceanspaces.com/buildings_updated_dec_6_2023/{z}/{x}/{y}.pbf",

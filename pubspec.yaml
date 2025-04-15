@@ -11,6 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   maplibre_gl: ^0.20.0
+  webview_flutter: ^4.10.0
   baato_api:
     git:
       url: https://github.com/baato/baato-flutter.git
