@@ -1,3 +1,14 @@
-## 0.0.1
+## 1.0.0
 
-- TODO: Describe initial release.
+- Initial release of Baato Maps Flutter Package
+- Interactive Map Display with `BaatoMapWidget`
+- Custom Map Styles including breeze and monochrome
+- Location Services for user location tracking and updates
+- Place Search with auto-suggestions using `BaatoPlaceAutoSuggestion`
+- Marker Management to add, remove, and customize map markers
+- Route Management for route display and navigation features
+- Shape Drawing to draw circles, polygons, and other shapes on the map
+- GeoJSON Support to visualize GeoJSON data on the map
+- Coordinate Conversion between screen and geographic coordinates
+- Layer Management to add and manage multiple map layers
+- Cross-Platform support for both iOS and Android
