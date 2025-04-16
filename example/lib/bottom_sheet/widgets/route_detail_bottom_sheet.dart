@@ -60,12 +60,12 @@ class _RouteDetailBottomSheetWidgetState
 
       final route = await Baato.api.direction.getRoutes(
         startCoordinate: BaatoCoordinate(
-          _startCoordinates!.latitude,
-          _startCoordinates!.longitude,
+          latitude: _startCoordinates!.latitude,
+          longitude: _startCoordinates!.longitude,
         ),
         endCoordinate: BaatoCoordinate(
-          _endCoordinates!.latitude,
-          _endCoordinates!.longitude,
+          latitude: _endCoordinates!.latitude,
+          longitude: _endCoordinates!.longitude,
         ),
         mode: BaatoDirectionMode.car,
         decodePolyline: true,

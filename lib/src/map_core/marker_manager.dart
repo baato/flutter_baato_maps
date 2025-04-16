@@ -1,48 +1,71 @@
 import 'dart:ui';
 
 import 'package:baato_maps/baato_maps.dart';
+import 'package:baato_maps/src/map_core/source_and_layer_manager.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
+/// A manager class that handles marker operations for Baato Maps.
+///
+/// This class provides methods to add, remove, update, and clear markers on the map.
+/// It works with the underlying MapLibre map controller to manage map symbols.
 class MarkerManager {
+  /// The underlying MapLibre map controller used for marker operations
   final MapLibreMapController _mapLibreMapController;
 
-  MarkerManager(this._mapLibreMapController);
+  /// The source and layer manager for handling map sources and layers
+  final SourceAndLayerManager _sourceAndLayerManager;
 
-  Future<Symbol> addMarker(
-    BaatoCoordinate position, {
-    String? iconImage,
-    double? iconSize,
-    String? title,
-    String? textColor,
-    String? textHaloColor,
-    double? textHaloWidth,
-    double? textSize,
-    Offset? textOffset,
-  }) async {
+  /// Creates a new MarkerManager with the specified controllers
+  ///
+  /// [_mapLibreMapController] is the MapLibre controller used for marker operations
+  /// [_sourceAndLayerManager] is the manager for map sources and layers
+  MarkerManager(this._mapLibreMapController, this._sourceAndLayerManager);
+
+  /// Adds a marker to the map with the specified options.
+  ///
+  /// This method places a symbol on the map based on the provided options.
+  /// It automatically applies default offsets if none are specified.
+  ///
+  /// Parameters:
+  /// - [option]: The [BaatoSymbolOption] defining the marker's appearance and position
+  /// - [data]: Optional additional data to associate with the marker
+  ///
+  /// Returns a [Future] that completes with the created [Symbol] object,
+  /// which can be used to update or remove the marker later.
+  Future<Symbol> addMarker(BaatoSymbolOption option,
+      {Map<dynamic, dynamic>? data}) async {
+    option = option.copyWith(
+        iconOffset: option.iconOffset ?? const Offset(0, -10),
+        textOffset: option.textOffset ?? const Offset(0, 0.8));
     return await _mapLibreMapController.addSymbol(
-      SymbolOptions(
-        geometry: LatLng(position.latitude, position.longitude),
-        iconImage: "custom_marker",
-        iconSize: iconSize,
-        textField: title,
-        textSize: textSize,
-        textOffset: textOffset ?? const Offset(0, 2),
-        textColor: textColor ?? "#FF0000",
-        textHaloColor: textHaloColor ?? "#FFFFFF",
-        textHaloWidth: textHaloWidth ?? 2.0,
-        fontNames: ["OpenSans"],
-      ),
-    );
+        option.toSymbolOptions(), data);
   }
 
+  /// Removes all markers from the map.
+  ///
+  /// This method clears all symbols that have been added to the map.
+  /// Returns a [Future] that completes when all markers have been removed.
   Future<void> clearMarkers() async {
     await _mapLibreMapController.clearSymbols();
   }
 
+  /// Removes a specific marker from the map.
+  ///
+  /// Parameters:
+  /// - [symbol]: The [Symbol] object to remove from the map
+  ///
+  /// Returns a [Future] that completes when the marker has been removed.
   Future<void> removeSymbol(Symbol symbol) async {
     await _mapLibreMapController.removeSymbol(symbol);
   }
 
+  /// Updates an existing marker with new options.
+  ///
+  /// Parameters:
+  /// - [symbol]: The [Symbol] object to update
+  /// - [changes]: The [SymbolOptions] containing the properties to change
+  ///
+  /// Returns a [Future] that completes when the marker has been updated.
   Future<void> updateSymbol(Symbol symbol, SymbolOptions changes) async {
     await _mapLibreMapController.updateSymbol(symbol, changes);
   }

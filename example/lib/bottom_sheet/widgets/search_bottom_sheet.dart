@@ -90,7 +90,10 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
           child: BaatoPlaceAutoSuggestion(
             hintText: 'Search for a place',
             onPlaceSelected: (suggestion) {},
-            currentCoordinate: BaatoCoordinate(27.7172, 85.3240),
+            currentCoordinate: BaatoCoordinate(
+              latitude: 27.7172,
+              longitude: 85.3240,
+            ),
             suggestionsHeader: Container(
               color: Colors.white.withOpacity(0.8),
               child: Text('Suggestions'),
@@ -115,8 +118,8 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
             onPlaceDetailsRetrieved: (place) {
               BaatoMapView.mapController.cameraManager?.moveTo(
                 BaatoCoordinate(
-                  place.centroid.latitude,
-                  place.centroid.longitude,
+                  latitude: place.centroid.latitude,
+                  longitude: place.centroid.longitude,
                 ),
               );
               widget.controller.updateBottomSheetType(
@@ -199,12 +202,18 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
                 final index = BaatoMapView.markers.length - 1;
                 BaatoMapView.mapController.shapeManager.addMultiLine(
                   [
-                    BaatoCoordinate(BaatoMapView.markers[index - 2].latitude,
-                        BaatoMapView.markers[index - 2].longitude),
-                    BaatoCoordinate(BaatoMapView.markers[index - 1].latitude,
-                        BaatoMapView.markers[index - 1].longitude),
-                    BaatoCoordinate(BaatoMapView.markers[index].latitude,
-                        BaatoMapView.markers[index].longitude),
+                    BaatoCoordinate(
+                      latitude: BaatoMapView.markers[index - 2].latitude,
+                      longitude: BaatoMapView.markers[index - 2].longitude,
+                    ),
+                    BaatoCoordinate(
+                      latitude: BaatoMapView.markers[index - 1].latitude,
+                      longitude: BaatoMapView.markers[index - 1].longitude,
+                    ),
+                    BaatoCoordinate(
+                      latitude: BaatoMapView.markers[index].latitude,
+                      longitude: BaatoMapView.markers[index].longitude,
+                    ),
                   ],
                   options: BaatoLineOptions(
                     lineColor: '#081E2A',
@@ -228,10 +237,14 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
                 }
                 final index = BaatoMapView.markers.length - 1;
                 BaatoMapView.mapController.shapeManager.addLine(
-                  BaatoCoordinate(BaatoMapView.markers[index - 1].latitude,
-                      BaatoMapView.markers[index - 1].longitude),
-                  BaatoCoordinate(BaatoMapView.markers[index].latitude,
-                      BaatoMapView.markers[index].longitude),
+                  BaatoCoordinate(
+                    latitude: BaatoMapView.markers[index - 1].latitude,
+                    longitude: BaatoMapView.markers[index - 1].longitude,
+                  ),
+                  BaatoCoordinate(
+                    latitude: BaatoMapView.markers[index].latitude,
+                    longitude: BaatoMapView.markers[index].longitude,
+                  ),
                   options: BaatoLineOptions(
                     lineColor: '#081E2A',
                     lineWidth: 10.0,

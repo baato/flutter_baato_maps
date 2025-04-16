@@ -28,8 +28,8 @@ class BaatoMapView extends StatelessWidget {
       children: [
         BaatoMapWidget(
           initialPosition: BaatoCoordinate(
-            initialPosition.latitude,
-            initialPosition.longitude,
+            latitude: initialPosition.latitude,
+            longitude: initialPosition.longitude,
           ),
           initialZoom: initialZoom,
           initialStyle: styleUrl!,

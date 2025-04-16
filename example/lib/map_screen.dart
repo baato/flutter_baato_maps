@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:baato_maps/baato_maps.dart';
 
 /// A widget that displays the main map interface with a bottom sheet.
-/// 
+///
 /// This screen combines the [BaatoMapView] with an interactive bottom sheet
 /// that can show search, place details, or route information.
 class MapScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class MapScreen extends StatefulWidget {
 }
 
 /// State for the [MapScreen] widget.
-/// 
+///
 /// Manages the map style and bottom sheet controller, and builds
 /// the UI combining the map view with the appropriate bottom sheet content.
 class _MapScreenState extends State<MapScreen> {
@@ -36,7 +36,10 @@ class _MapScreenState extends State<MapScreen> {
       body: _currentStyle.isNotEmpty
           ? FlutterBottomSheet(
               body: BaatoMapView(
-                initialPosition: BaatoCoordinate(27.7172, 85.3240),
+                initialPosition: BaatoCoordinate(
+                  latitude: 27.7172,
+                  longitude: 85.3240,
+                ),
                 styleUrl: _currentStyle,
               ),
               controller: _sheetController,

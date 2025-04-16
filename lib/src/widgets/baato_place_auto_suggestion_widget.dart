@@ -4,6 +4,23 @@ import 'package:baato_maps/src/baato.dart';
 import 'package:baato_maps/src/widgets/baato_place_search_dropdown.dart';
 import 'package:flutter/material.dart';
 
+/// A widget that provides place search auto-suggestions using Baato's place search API.
+///
+/// This widget displays a search field that shows suggestions as the user types,
+/// allowing them to search for places and select from the results.
+///
+/// Example usage:
+/// ```dart
+/// BaatoPlaceAutoSuggestion(
+///   onPlaceSelected: (place) {
+///     print('Selected place: ${place.name}');
+///   },
+///   onPlaceDetailsRetrieved: (placeDetails) {
+///     print('Place details: ${placeDetails.name}');
+///   },
+///   currentCoordinate: BaatoCoordinate(latitude: 27.7172, longitude: 85.3240),
+/// )
+/// ```
 class BaatoPlaceAutoSuggestion extends StatefulWidget {
   /// The API key for Baato services (optional, will use BaatoMapConfiguration if not provided)
   final String? apiKey;
@@ -80,6 +97,13 @@ class BaatoPlaceAutoSuggestion extends StatefulWidget {
   /// Initial selected place
   final BaatoSearchPlace? initialSelection;
 
+  /// Creates a BaatoPlaceAutoSuggestion widget.
+  ///
+  /// The [onPlaceSelected] callback is required and will be called when a user
+  /// selects a place from the suggestions.
+  ///
+  /// If [onPlaceDetailsRetrieved] is provided, the widget will automatically fetch
+  /// detailed information about the selected place and call this callback.
   const BaatoPlaceAutoSuggestion({
     Key? key,
     this.apiKey,
@@ -120,6 +144,7 @@ class BaatoPlaceAutoSuggestion extends StatefulWidget {
       _BaatoPlaceAutoSuggestionState();
 }
 
+/// The state for the BaatoPlaceAutoSuggestion widget.
 class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
   late TextEditingController _textController;
   late FocusNode _focusNode;
@@ -143,12 +168,16 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
     super.dispose();
   }
 
+  /// Handles focus changes and calls the onFocusChanged callback if provided.
   void _onFocusChange() {
     if (widget.onFocusChanged != null) {
       widget.onFocusChanged!(_focusNode.hasFocus);
     }
   }
 
+  /// Searches for places using the Baato API based on the provided query.
+  ///
+  /// Returns a list of BaatoSearchPlace objects that match the query.
   Future<List<BaatoSearchPlace>> _searchPlaces(String query) async {
     if (query.isEmpty) return [];
     try {
@@ -167,6 +196,9 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
     }
   }
 
+  /// Fetches detailed information about a place using its ID.
+  ///
+  /// Calls the onPlaceDetailsRetrieved callback with the retrieved place details.
   Future<void> _fetchPlaceDetails(int placeId) async {
     if (widget.onPlaceDetailsRetrieved == null) return;
 
@@ -180,6 +212,10 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
     }
   }
 
+  /// Handles the selection of a suggestion from the dropdown.
+  ///
+  /// Updates the text field, calls the onPlaceSelected callback, and
+  /// fetches place details if needed.
   void _handleSuggestionSelected(BaatoSearchPlace suggestion) {
     _textController.text = suggestion.name;
     widget.onPlaceSelected(suggestion);
@@ -217,39 +253,34 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
           return widget.suggestionBuilder!(context, suggestion);
         }
 
-        final String distanceText =
-            suggestion.radialDistanceInKm > 0.01
-                ? '${suggestion.radialDistanceInKm.toStringAsFixed(2)} km'
-                : '';
+        final String distanceText = suggestion.radialDistanceInKm > 0.01
+            ? '${suggestion.radialDistanceInKm.toStringAsFixed(2)} km'
+            : '';
 
         return ListTile(
-          leading:
-              distanceText.isEmpty
-                  ? null
-                  : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(Icons.location_on, color: Colors.red),
-                      if (distanceText.isNotEmpty)
-                        Text(
-                          distanceText,
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                    ],
-                  ),
+          leading: distanceText.isEmpty
+              ? null
+              : Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.location_on, color: Colors.red),
+                    if (distanceText.isNotEmpty)
+                      Text(
+                        distanceText,
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                  ],
+                ),
           title: Text(
             suggestion.name,
-            style:
-                widget.suggestionTextStyle ??
+            style: widget.suggestionTextStyle ??
                 const TextStyle(fontWeight: FontWeight.bold),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-
           subtitle: Text(
             suggestion.address,
-            style:
-                widget.suggestionAddressTextStyle ??
+            style: widget.suggestionAddressTextStyle ??
                 TextStyle(
                   color: Theme.of(context).textTheme.bodySmall?.color,
                   fontSize: 12,
@@ -257,7 +288,6 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
-
           onTap: () {
             _handleSuggestionSelected(suggestion);
           },

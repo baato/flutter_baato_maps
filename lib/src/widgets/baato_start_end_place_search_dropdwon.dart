@@ -4,11 +4,28 @@ import 'package:flutter/material.dart';
 
 /// A widget that provides a search interface for route planning with start, end,
 /// and optional midpoint locations.
+///
+/// This widget creates a complete UI for route planning with search functionality,
+/// including:
+/// - Start location field
+/// - End location field
+/// - Optional midpoint/stop locations
+/// - Location swapping
+/// - Autocomplete suggestions
+///
+/// The widget handles all the UI interactions and calls the provided callbacks
+/// when locations are selected or changed.
 class BaatoStartEndPlaceSearchDropdown<T> extends StatefulWidget {
   /// The function that will be called to fetch suggestions based on the search query.
+  ///
+  /// This function should return a Future that resolves to a list of suggestions
+  /// of type T. It receives the current search query as a parameter.
   final Future<List<T>> Function(String query) suggestionsBuilder;
 
   /// The debounce duration to wait after typing before calling the suggestionsBuilder.
+  ///
+  /// This helps reduce the number of API calls by waiting until the user has
+  /// stopped typing for this duration.
   final Duration debounceDuration;
 
   /// Initial text to display in the start location field.
@@ -27,59 +44,100 @@ class BaatoStartEndPlaceSearchDropdown<T> extends StatefulWidget {
   final String? midpointHintText;
 
   /// Decoration for the search input fields.
+  ///
+  /// If not provided, a default decoration will be used.
   final InputDecoration? inputDecoration;
 
   /// Function to build the UI for each suggestion item.
+  ///
+  /// This function receives a suggestion of type T and should return a Widget
+  /// that represents how the suggestion should be displayed in the dropdown.
   final Widget Function(T suggestion) itemBuilder;
 
   /// Function called when a start location suggestion is selected.
+  ///
+  /// This function receives the selected suggestion of type T.
   final void Function(T suggestion)? onStartSuggestionSelected;
 
   /// Function called when an end location suggestion is selected.
+  ///
+  /// This function receives the selected suggestion of type T.
   final void Function(T suggestion)? onEndSuggestionSelected;
 
   /// Function called when a midpoint suggestion is selected.
+  ///
+  /// This function receives the selected suggestion of type T and the index
+  /// of the midpoint in the list of midpoints.
   final void Function(T suggestion, int index)? onMidpointSuggestionSelected;
 
   /// Function called when locations are swapped.
+  ///
+  /// This function receives the new start and end location texts after swapping.
   final void Function(String? start, String? end)? onLocationsSwapped;
 
   /// Function called when a midpoint is added.
+  ///
+  /// This is called after a new midpoint field is added to the UI.
   final void Function()? onMidpointAdded;
 
   /// Function called when a midpoint is removed.
+  ///
+  /// This function receives the index of the removed midpoint.
   final void Function(int index)? onMidpointRemoved;
 
   /// Maximum number of suggestions to display.
+  ///
+  /// This limits the number of items shown in the dropdown list.
   final int maxSuggestions;
 
   /// Whether to show a clear button in the search fields.
+  ///
+  /// When true, a clear button will appear in each field when it contains text.
   final bool showClearButton;
 
   /// Style for the suggestion items container.
+  ///
+  /// This decoration is applied to the container that holds the suggestion list.
   final BoxDecoration? suggestionsBoxDecoration;
 
   /// Height of each suggestion item.
+  ///
+  /// This determines the height of each item in the suggestion dropdown.
   final double itemHeight;
 
   /// Whether the search fields should have focus when first displayed.
+  ///
+  /// When true, the start location field will be focused when the widget is first shown.
   final bool autofocus;
 
   /// Text style for the search inputs.
+  ///
+  /// This style is applied to the text in all search fields.
   final TextStyle? textStyle;
 
   /// Loading widget to display while fetching suggestions.
+  ///
+  /// This widget is shown in the dropdown while waiting for suggestions to load.
   final Widget? loadingBuilder;
 
   /// Widget to display when no suggestions are available.
+  ///
+  /// This widget is shown in the dropdown when the search returns no results.
   final Widget? noItemsFoundBuilder;
 
   /// Maximum number of midpoints allowed.
+  ///
+  /// This limits the number of midpoint/stop fields that can be added.
   final int maxMidpoints;
 
   /// Whether to show the add stops/midpoints option
+  ///
+  /// When true, users can add intermediate stops between start and end locations.
   final bool showMidpoints;
 
+  /// Creates a BaatoStartEndPlaceSearchDropdown widget.
+  ///
+  /// The [suggestionsBuilder] and [itemBuilder] parameters are required.
   const BaatoStartEndPlaceSearchDropdown({
     Key? key,
     required this.suggestionsBuilder,
@@ -326,20 +384,19 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
     final size = renderBox.size;
 
     _startOverlayEntry = OverlayEntry(
-      builder:
-          (context) => _buildSuggestionsOverlay(
-            _startLayerLink,
-            _startSuggestions,
-            _isStartLoading,
-            size.width,
-            (suggestion) {
-              _startController.text = suggestion.toString();
-              if (widget.onStartSuggestionSelected != null) {
-                widget.onStartSuggestionSelected!(suggestion);
-              }
-              _removeStartOverlay();
-            },
-          ),
+      builder: (context) => _buildSuggestionsOverlay(
+        _startLayerLink,
+        _startSuggestions,
+        _isStartLoading,
+        size.width,
+        (suggestion) {
+          _startController.text = suggestion.toString();
+          if (widget.onStartSuggestionSelected != null) {
+            widget.onStartSuggestionSelected!(suggestion);
+          }
+          _removeStartOverlay();
+        },
+      ),
     );
 
     overlay.insert(_startOverlayEntry!);
@@ -353,20 +410,19 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
     final size = renderBox.size;
 
     _endOverlayEntry = OverlayEntry(
-      builder:
-          (context) => _buildSuggestionsOverlay(
-            _endLayerLink,
-            _endSuggestions,
-            _isEndLoading,
-            size.width,
-            (suggestion) {
-              _endController.text = suggestion.toString();
-              if (widget.onEndSuggestionSelected != null) {
-                widget.onEndSuggestionSelected!(suggestion);
-              }
-              _removeEndOverlay();
-            },
-          ),
+      builder: (context) => _buildSuggestionsOverlay(
+        _endLayerLink,
+        _endSuggestions,
+        _isEndLoading,
+        size.width,
+        (suggestion) {
+          _endController.text = suggestion.toString();
+          if (widget.onEndSuggestionSelected != null) {
+            widget.onEndSuggestionSelected!(suggestion);
+          }
+          _removeEndOverlay();
+        },
+      ),
     );
 
     overlay.insert(_endOverlayEntry!);
@@ -374,28 +430,26 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
 
   void _showMidpointOverlay(int index) {
     if (_midpointOverlayEntries[index] != null ||
-        !_showMidpointSuggestions[index])
-      return;
+        !_showMidpointSuggestions[index]) return;
 
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
     final size = renderBox.size;
 
     _midpointOverlayEntries[index] = OverlayEntry(
-      builder:
-          (context) => _buildSuggestionsOverlay(
-            _midpointLayerLinks[index],
-            _midpointSuggestions[index],
-            _isMidpointLoading[index],
-            size.width,
-            (suggestion) {
-              _midpointControllers[index].text = suggestion.toString();
-              if (widget.onMidpointSuggestionSelected != null) {
-                widget.onMidpointSuggestionSelected!(suggestion, index);
-              }
-              _removeMidpointOverlay(index);
-            },
-          ),
+      builder: (context) => _buildSuggestionsOverlay(
+        _midpointLayerLinks[index],
+        _midpointSuggestions[index],
+        _isMidpointLoading[index],
+        size.width,
+        (suggestion) {
+          _midpointControllers[index].text = suggestion.toString();
+          if (widget.onMidpointSuggestionSelected != null) {
+            widget.onMidpointSuggestionSelected!(suggestion, index);
+          }
+          _removeMidpointOverlay(index);
+        },
+      ),
     );
 
     overlay.insert(_midpointOverlayEntries[index]!);
@@ -434,8 +488,7 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
           constraints: BoxConstraints(
             maxHeight: 300, // Set a reasonable max height for the overlay
           ),
-          decoration:
-              widget.suggestionsBoxDecoration ??
+          decoration: widget.suggestionsBoxDecoration ??
               BoxDecoration(
                 color: Colors.white,
                 border: Border.all(color: Colors.grey.shade300),
@@ -567,8 +620,7 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
             focusNode: _startFocusNode,
             style: widget.textStyle,
             autofocus: widget.autofocus,
-            decoration:
-                widget.inputDecoration ??
+            decoration: widget.inputDecoration ??
                 InputDecoration(
                   hintText: widget.startHintText,
                   prefixIcon: const Icon(
@@ -578,16 +630,16 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
                   suffixIcon:
                       widget.showClearButton && _startController.text.isNotEmpty
                           ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _startController.clear();
-                              setState(() {
-                                _startSuggestions = [];
-                                _showStartSuggestions = false;
-                              });
-                              _removeStartOverlay();
-                            },
-                          )
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _startController.clear();
+                                setState(() {
+                                  _startSuggestions = [];
+                                  _showStartSuggestions = false;
+                                });
+                                _removeStartOverlay();
+                              },
+                            )
                           : null,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -618,38 +670,36 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
                         controller: _midpointControllers[index],
                         focusNode: _midpointFocusNodes[index],
                         style: widget.textStyle,
-                        decoration:
-                            widget.inputDecoration ??
+                        decoration: widget.inputDecoration ??
                             InputDecoration(
                               hintText: widget.midpointHintText,
                               prefixIcon: const Icon(
                                 Icons.location_on,
                                 color: Colors.blue,
                               ),
-                              suffixIcon:
-                                  widget.showClearButton &&
-                                          _midpointControllers[index]
-                                              .text
-                                              .isNotEmpty
-                                      ? IconButton(
-                                        icon: const Icon(Icons.clear),
-                                        onPressed: () {
-                                          _midpointControllers[index].clear();
-                                          setState(() {
-                                            _midpointSuggestions[index] = [];
-                                            _showMidpointSuggestions[index] =
-                                                false;
-                                          });
-                                          _removeMidpointOverlay(index);
-                                        },
-                                      )
-                                      : null,
+                              suffixIcon: widget.showClearButton &&
+                                      _midpointControllers[index]
+                                          .text
+                                          .isNotEmpty
+                                  ? IconButton(
+                                      icon: const Icon(Icons.clear),
+                                      onPressed: () {
+                                        _midpointControllers[index].clear();
+                                        setState(() {
+                                          _midpointSuggestions[index] = [];
+                                          _showMidpointSuggestions[index] =
+                                              false;
+                                        });
+                                        _removeMidpointOverlay(index);
+                                      },
+                                    )
+                                  : null,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(8.0),
                               ),
                             ),
-                        onChanged:
-                            (query) => _onMidpointSearchChanged(query, index),
+                        onChanged: (query) =>
+                            _onMidpointSearchChanged(query, index),
                         onTap: () {
                           if (_midpointControllers[index].text.isNotEmpty) {
                             _getMidpointSuggestions(
@@ -699,29 +749,27 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
                   controller: _endController,
                   focusNode: _endFocusNode,
                   style: widget.textStyle,
-                  decoration:
-                      widget.inputDecoration ??
+                  decoration: widget.inputDecoration ??
                       InputDecoration(
                         hintText: widget.endHintText,
                         prefixIcon: const Icon(
                           Icons.location_on,
                           color: Colors.red,
                         ),
-                        suffixIcon:
-                            widget.showClearButton &&
-                                    _endController.text.isNotEmpty
-                                ? IconButton(
-                                  icon: const Icon(Icons.clear),
-                                  onPressed: () {
-                                    _endController.clear();
-                                    setState(() {
-                                      _endSuggestions = [];
-                                      _showEndSuggestions = false;
-                                    });
-                                    _removeEndOverlay();
-                                  },
-                                )
-                                : null,
+                        suffixIcon: widget.showClearButton &&
+                                _endController.text.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear),
+                                onPressed: () {
+                                  _endController.clear();
+                                  setState(() {
+                                    _endSuggestions = [];
+                                    _showEndSuggestions = false;
+                                  });
+                                  _removeEndOverlay();
+                                },
+                              )
+                            : null,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8.0),
                         ),
