@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:baato_maps/baato_maps.dart';
 import 'package:example/baato_map_view.dart';
 import 'package:example/bottom_sheet/bottom_sheet_controller.dart';
@@ -145,38 +143,73 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
             IconButton(
               icon: Icon(Icons.add_location),
               onPressed: () {
-                // Add GeoJson to the map
-                const kathmanduGeoJsonPolygon = {
-                  "type": "Feature",
-                  "geometry": {
-                    "type": "Polygon",
-                    "coordinates": [
-                      [
-                        [27.7172, 85.3240],
-                        [85.2911, 27.7000],
-                        [85.3333, 27.7000],
-                        [85.3333, 27.7500],
-                        [85.2911, 27.7500],
-                        [85.2911, 27.7000],
-                      ],
-                    ],
-                  },
-                  "properties": {"fill": "#088", "fill-opacity": 0.8},
-                };
-                // BaatoMapView.mapController.addGeoJson(kathmanduGeoJsonPolygon);
+                if (BaatoMapView.markers.length < 3) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please add at least three markers'),
+                    ),
+                  );
+                  return;
+                }
+                BaatoMapView.mapController.shapeManager.addFill(
+                  BaatoMapView.markers,
+                  options: BaatoFillOptions(
+                    fillColor: "#00FF00",
+                    fillOpacity: 0.3,
+                    fillOutlineColor: "#00FF00",
+                  ),
+                );
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.circle),
+              onPressed: () {
+                if (BaatoMapView.markers.length < 1) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please add at least one marker'),
+                    ),
+                  );
+                  return;
+                }
+                final index = BaatoMapView.markers.length - 1;
+                BaatoMapView.mapController.shapeManager.addCircle(
+                  BaatoCircleOptions(
+                    center: BaatoMapView.markers[index],
+                    circleRadius: 100,
+                    circleColor: "#00FF00",
+                    circleOpacity: 0.3,
+                    circleStrokeColor: "#00FF00",
+                    circleStrokeWidth: 10,
+                  ),
+                );
               },
             ),
             IconButton(
               icon: Icon(Icons.timeline),
               onPressed: () {
-                // Add a polyline to the map
-                BaatoMapView.mapController.shapeManager.addLine(
-                  LineOptions(
-                    geometry: [
-                      LatLng(27.7172, 85.3240),
-                      LatLng(27.7182, 85.3250),
-                      LatLng(27.7192, 85.3260),
-                    ],
+                if (BaatoMapView.markers.length < 3) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please add at least three markers'),
+                    ),
+                  );
+                  return;
+                }
+                final index = BaatoMapView.markers.length - 1;
+                BaatoMapView.mapController.shapeManager.addMultiLine(
+                  [
+                    BaatoCoordinate(BaatoMapView.markers[index - 2].latitude,
+                        BaatoMapView.markers[index - 2].longitude),
+                    BaatoCoordinate(BaatoMapView.markers[index - 1].latitude,
+                        BaatoMapView.markers[index - 1].longitude),
+                    BaatoCoordinate(BaatoMapView.markers[index].latitude,
+                        BaatoMapView.markers[index].longitude),
+                  ],
+                  options: BaatoLineOptions(
+                    lineColor: '#081E2A',
+                    lineWidth: 10.0,
+                    lineOpacity: 0.5,
                   ),
                 );
               },
@@ -185,19 +218,45 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               icon: Icon(Icons.linear_scale),
               onPressed: () {
                 // Add a line to the map
+                if (BaatoMapView.markers.length < 2) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please add at least two markers'),
+                    ),
+                  );
+                  return;
+                }
+                final index = BaatoMapView.markers.length - 1;
                 BaatoMapView.mapController.shapeManager.addLine(
-                  LineOptions(
-                    geometry: [
-                      LatLng(27.7172, 85.3240),
-                      LatLng(27.7182, 85.3250),
-                      LatLng(27.7192, 85.3260),
-                    ],
+                  BaatoCoordinate(BaatoMapView.markers[index - 1].latitude,
+                      BaatoMapView.markers[index - 1].longitude),
+                  BaatoCoordinate(BaatoMapView.markers[index].latitude,
+                      BaatoMapView.markers[index].longitude),
+                  options: BaatoLineOptions(
+                    lineColor: '#081E2A',
+                    lineWidth: 10.0,
+                    lineOpacity: 0.5,
+                    draggable: true,
                   ),
                 );
               },
             ),
           ],
         ),
+        Spacer(),
+        IconButton(
+          icon: Icon(Icons.clear),
+          color: Colors.red,
+          iconSize: 32,
+          onPressed: () {
+            BaatoMapView.markers.clear();
+            BaatoMapView.mapController.shapeManager.clearLines();
+            BaatoMapView.mapController.markerManager.clearMarkers();
+            BaatoMapView.mapController.shapeManager.clearFills();
+            BaatoMapView.mapController.shapeManager.clearCircles();
+          },
+        ),
+        const SizedBox(height: 16),
       ],
     );
   }

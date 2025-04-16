@@ -7,6 +7,7 @@ class BaatoMapView extends StatelessWidget {
   final String? styleUrl;
   final bool myLocationEnabled;
   static late BaatoMapController mapController;
+  static List<BaatoCoordinate> markers = [];
 
   BaatoMapView({
     Key? key,
@@ -18,6 +19,11 @@ class BaatoMapView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (styleUrl == null) {
+      return const Center(
+        child: Text('Please provide a style URL'),
+      );
+    }
     return Stack(
       children: [
         BaatoMapWidget(
@@ -26,36 +32,38 @@ class BaatoMapView extends StatelessWidget {
             initialPosition.longitude,
           ),
           initialZoom: initialZoom,
-          initialStyle: styleUrl ?? "http://localhost:8080/styles/breeze.json",
-          myLocationEnabled: false,
+          initialStyle: styleUrl!,
+          myLocationEnabled: true,
           onMapCreated: (controller) {
             BaatoMapView.mapController = controller;
           },
-          onTap: (point, latLng, features) {
+          onTap: (point, coordinate, features) {
+            BaatoMapView.markers.add(coordinate);
             if (features.isNotEmpty) {
               final firstFeature = features.first;
               mapController.markerManager.addMarker(
-                latLng,
-                title: firstFeature.name,
+                BaatoSymbolOption(
+                    geometry: coordinate, textField: firstFeature.name),
               );
             } else {
               mapController.markerManager.addMarker(
-                latLng,
-                title: "Drop a pin",
+                BaatoSymbolOption(
+                    geometry: coordinate, textField: "Drop a pin"),
               );
             }
           },
-          onLongPress: (point, latLng, features) {
+          onLongPress: (point, coordinate, features) {
             if (features.isNotEmpty) {
               final firstFeature = features.first;
               mapController.markerManager.addMarker(
-                latLng,
-                title: firstFeature.name ?? "N/A",
+                BaatoSymbolOption(
+                    geometry: coordinate,
+                    textField: firstFeature.name ?? "N/A"),
               );
             } else {
               mapController.markerManager.addMarker(
-                latLng,
-                title: "Drop a pin",
+                BaatoSymbolOption(
+                    geometry: coordinate, textField: "Drop a pin"),
               );
             }
           },
@@ -65,7 +73,7 @@ class BaatoMapView extends StatelessWidget {
           right: 16.0,
           child: FloatingActionButton(
             onPressed: () {
-              mapController.markerManager.clearMarkers();
+              mapController.cameraManager?.moveToMyLocation();
             },
             backgroundColor: Colors.white,
             child: const Icon(Icons.my_location, color: Colors.blue),

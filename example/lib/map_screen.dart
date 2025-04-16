@@ -6,8 +6,11 @@ import 'package:example/bottom_sheet/widgets/route_detail_bottom_sheet.dart';
 import 'package:example/bottom_sheet/widgets/search_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:baato_maps/baato_maps.dart';
-import 'dart:async';
 
+/// A widget that displays the main map interface with a bottom sheet.
+/// 
+/// This screen combines the [BaatoMapView] with an interactive bottom sheet
+/// that can show search, place details, or route information.
 class MapScreen extends StatefulWidget {
   const MapScreen({Key? key}) : super(key: key);
 
@@ -15,71 +18,13 @@ class MapScreen extends StatefulWidget {
   _MapScreenState createState() => _MapScreenState();
 }
 
+/// State for the [MapScreen] widget.
+/// 
+/// Manages the map style and bottom sheet controller, and builds
+/// the UI combining the map view with the appropriate bottom sheet content.
 class _MapScreenState extends State<MapScreen> {
-  late ServerManager _serverManager;
-  String _currentStyle = '';
-  bool _isServerRunning = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _serverManager = ServerManager();
-    // Set the context after the widget is built
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _serverManager.setContext(context);
-      _startServerAndLoadStyle();
-    });
-  }
-
-  @override
-  void dispose() {
-    _serverManager.stopServer();
-    super.dispose();
-  }
-
-  Future<void> _startServerAndLoadStyle() async {
-    // Start the server
-    await _serverManager.startServer();
-    setState(() {
-      _isServerRunning = _serverManager.isRunning;
-    });
-
-    // Load the style from the local server
-    if (_isServerRunning) {
-      await _loadLocalStyle();
-    }
-  }
-
-  Future<void> _loadLocalStyle() async {
-    try {
-      const styleUrl = 'http://localhost:8080/styles/breeze.json';
-      // const styleUrl =
-      //     'https://api.maptiler.com/maps/0196139b-bc15-7a93-960c-eb9ae7a90814/style.json?key=XNth7tPtxV7h9PHjlJHR'; //'http://localhost:8080/styles/breeze.json';
-      setState(() {
-        _currentStyle = styleUrl;
-      });
-      print("Using local server style: $styleUrl");
-    } catch (e) {
-      print("Error loading local style: $e");
-      setState(() {
-        _currentStyle = '';
-      });
-    }
-  }
-
-  Future<void> _toggleServer() async {
-    if (_isServerRunning) {
-      await _serverManager.stopServer();
-    } else {
-      await _serverManager.startServer();
-      if (_serverManager.isRunning) {
-        await _loadLocalStyle();
-      }
-    }
-    setState(() {
-      _isServerRunning = _serverManager.isRunning;
-    });
-  }
+  final String _currentStyle =
+      'https://tileboundaries.baato.io/admin_boundary/baato_lite.json';
 
   final BottomSheetController _sheetController = BottomSheetController(
     bottomSheetType: SearchBottomSheet(),
@@ -92,8 +37,7 @@ class _MapScreenState extends State<MapScreen> {
           ? FlutterBottomSheet(
               body: BaatoMapView(
                 initialPosition: BaatoCoordinate(27.7172, 85.3240),
-                styleUrl:
-                    "https://tileboundaries.baato.io/admin_boundary/baato_lite.json",
+                styleUrl: _currentStyle,
               ),
               controller: _sheetController,
               builder: (context, type) {
