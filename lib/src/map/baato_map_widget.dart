@@ -88,6 +88,98 @@ class BaatoMapWidget extends StatefulWidget {
   /// * All fade/transition animations have completed
   final OnMapIdleCallback? onMapIdle;
 
+  /// Defines the layer order of annotations displayed on map
+  ///
+  /// Any annotation type can only be contained once, so 0 to 4 types
+  ///
+  /// Note that setting this to be empty gives a big perfomance boost for
+  /// android. However if you do so annotations will not work.
+  final List<AnnotationType> annotationOrder;
+
+  /// Defines the layer order of click annotations
+  ///
+  /// (must contain at least 1 annotation type, 4 items max)
+  final List<AnnotationType> annotationConsumeTapEvents;
+
+  /// Called when the map style has been successfully loaded and the annotation managers have been enabled.
+  /// Please note: you should only add annotations (e.g. symbols or circles) after this callback has been called.
+  final OnStyleLoadedCallback? onStyleLoadedCallback;
+
+  /// How long a user has to click the map **on iOS** until a long click is registered.
+  /// Has no effect on web or Android. Can not be changed at runtime, only the initial value is used.
+  /// If null, the default value of the native MapLibre library / of the OS is used.
+  final Duration? iosLongClickDuration;
+
+  /// True if the map should show a compass when rotated.
+  final bool compassEnabled;
+
+  /// True if drag functionality should be enabled.
+  ///
+  /// Disable to avoid performance issues that from the drag event listeners.
+  /// Biggest impact in android
+  final bool dragEnabled;
+
+  /// Geographical bounding box for the camera target.
+  final CameraTargetBounds cameraTargetBounds;
+
+  /// Preferred bounds for the camera zoom level.
+  ///
+  /// Actual bounds depend on map data and device.
+  final MinMaxZoomPreference minMaxZoomPreference;
+
+  /// True if the map view should respond to rotate gestures.
+  final bool rotateGesturesEnabled;
+
+  /// True if the map view should respond to scroll gestures.
+  final bool scrollGesturesEnabled;
+
+  /// True if the map view should respond to zoom gestures.
+  final bool zoomGesturesEnabled;
+
+  /// True if the map view should respond to tilt gestures.
+  final bool tiltGesturesEnabled;
+
+  /// Set to true to forcefully disable/enable if map should respond to double
+  /// click to zoom.
+  ///
+  /// This takes presedence over zoomGesturesEnabled. Only supported for web.
+  final bool? doubleClickZoomEnabled;
+
+  /// True if you want to be notified of map camera movements by the [MapLibreMapController]. Default is false.
+  ///
+  /// If this is set to true and the user pans/zooms/rotates the map, [MapLibreMapController] (which is a [ChangeNotifier])
+  /// will notify it's listeners and you can then get the new [MapLibreMapController].cameraPosition.
+  final bool trackCameraPosition;
+
+  /// The mode used to let the map's camera follow the device's physical location.
+  /// `myLocationEnabled` needs to be true for values other than `MyLocationTrackingMode.None` to work.
+  final MyLocationTrackingMode myLocationTrackingMode;
+
+  /// Specifies if and how the user's heading/bearing is rendered in the user location indicator.
+  /// See the documentation of [MyLocationRenderMode] for details.
+  /// If this is set to a value other than [MyLocationRenderMode.normal], [myLocationEnabled] needs to be true.
+  final MyLocationRenderMode myLocationRenderMode;
+
+  /// Set the layout margins for the Logo
+  final Point? logoViewMargins;
+
+  /// Set the position for the Compass
+  final CompassViewPosition? compassViewPosition;
+
+  /// Set the layout margins for the Compass
+  final Point? compassViewMargins;
+
+  /// Set the position for the MapLibre Attribution Button
+  /// When set to null, the default value of the underlying MapLibre libraries is used,
+  /// which differs depending on the operating system the app is being run on.
+  final AttributionButtonPosition? attributionButtonPosition;
+
+  /// Set the layout margins for the MapLibre Attribution Buttons. If you set this
+  /// value, you may also want to set [attributionButtonPosition] to harmonize
+  /// the layout between iOS and Android, since the underlying frameworks have
+  /// different defaults.
+  final Point? attributionButtonMargins;
+
   /// Creates a BaatoMapWidget with the specified parameters.
   ///
   /// The [initialPosition] parameter is required and specifies the initial center point of the map.
@@ -111,6 +203,37 @@ class BaatoMapWidget extends StatefulWidget {
     this.onCameraTrackingChanged,
     this.onCameraIdle,
     this.onMapIdle,
+    this.onStyleLoadedCallback,
+    this.iosLongClickDuration,
+    this.compassEnabled = true,
+    this.dragEnabled = true,
+    this.cameraTargetBounds = CameraTargetBounds.unbounded,
+    this.minMaxZoomPreference = MinMaxZoomPreference.unbounded,
+    this.rotateGesturesEnabled = true,
+    this.scrollGesturesEnabled = true,
+    this.zoomGesturesEnabled = true,
+    this.tiltGesturesEnabled = true,
+    this.doubleClickZoomEnabled,
+    this.trackCameraPosition = false,
+    this.myLocationTrackingMode = MyLocationTrackingMode.none,
+    this.myLocationRenderMode = MyLocationRenderMode.normal,
+    this.logoViewMargins,
+    this.compassViewPosition,
+    this.compassViewMargins,
+    this.attributionButtonPosition,
+    this.attributionButtonMargins,
+    this.annotationOrder = const [
+      AnnotationType.fill,
+      AnnotationType.line,
+      AnnotationType.circle,
+      AnnotationType.symbol,
+    ],
+    this.annotationConsumeTapEvents = const [
+      AnnotationType.fill,
+      AnnotationType.line,
+      AnnotationType.circle,
+      AnnotationType.symbol,
+    ],
   });
 
   @override
@@ -211,6 +334,27 @@ class _BaatoMapWidgetState extends State<BaatoMapWidget> {
           },
           onMapIdle: widget.onMapIdle,
           gestureRecognizers: widget.gestureRecognizers,
+          annotationOrder: widget.annotationOrder,
+          annotationConsumeTapEvents: widget.annotationConsumeTapEvents,
+          onStyleLoadedCallback: widget.onStyleLoadedCallback,
+          iosLongClickDuration: widget.iosLongClickDuration,
+          compassEnabled: widget.compassEnabled,
+          dragEnabled: widget.dragEnabled,
+          cameraTargetBounds: widget.cameraTargetBounds,
+          minMaxZoomPreference: widget.minMaxZoomPreference,
+          rotateGesturesEnabled: widget.rotateGesturesEnabled,
+          scrollGesturesEnabled: widget.scrollGesturesEnabled,
+          zoomGesturesEnabled: widget.zoomGesturesEnabled,
+          tiltGesturesEnabled: widget.tiltGesturesEnabled,
+          doubleClickZoomEnabled: widget.doubleClickZoomEnabled,
+          trackCameraPosition: widget.trackCameraPosition,
+          myLocationTrackingMode: widget.myLocationTrackingMode,
+          myLocationRenderMode: widget.myLocationRenderMode,
+          logoViewMargins: widget.logoViewMargins,
+          compassViewPosition: widget.compassViewPosition,
+          compassViewMargins: widget.compassViewMargins,
+          attributionButtonPosition: widget.attributionButtonPosition,
+          attributionButtonMargins: widget.attributionButtonMargins,
         );
       },
     );
