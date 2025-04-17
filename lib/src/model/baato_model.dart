@@ -6,3 +6,4 @@ export './baato_circle_options.dart';
 export './baato_symbol_option.dart';
 export './baato_source_properties.dart';
 export './baato_layer_properties.dart';
+export './baato_annotation.dart';

@@ -256,6 +256,38 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
             ),
           ],
         ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            IconButton(
+              icon: Icon(Icons.directions_car),
+              onPressed: () async {
+                if (BaatoMapView.markers.length < 2) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please add at least two markers'),
+                    ),
+                  );
+                  return;
+                }
+                final index = BaatoMapView.markers.length - 1;
+                final route = await Baato.api.direction.getRoutes(
+                  startCoordinate: BaatoCoordinate(
+                    latitude: BaatoMapView.markers[index - 1].latitude,
+                    longitude: BaatoMapView.markers[index - 1].longitude,
+                  ),
+                  endCoordinate: BaatoCoordinate(
+                    latitude: BaatoMapView.markers[index].latitude,
+                    longitude: BaatoMapView.markers[index].longitude,
+                  ),
+                  mode: BaatoDirectionMode.car,
+                  decodePolyline: true,
+                );
+                BaatoMapView.mapController.routeManager.drawRoute(route);
+              },
+            ),
+          ],
+        ),
         Spacer(),
         IconButton(
           icon: Icon(Icons.clear),

@@ -26,8 +26,7 @@ class RouteManager {
   /// [_mapLibreMapController] is the MapLibre controller used for map operations
   /// [_sourceAndLayerManager] is the manager for map sources and layers
   RouteManager(this._mapLibreMapController, this._sourceAndLayerManager)
-      : _markerManager =
-            MarkerManager(_mapLibreMapController, _sourceAndLayerManager),
+      : _markerManager = MarkerManager(_mapLibreMapController),
         _shapeManager = ShapeManager(_mapLibreMapController);
 
   /// Adds a simple route between two coordinates with markers at each endpoint.
@@ -56,7 +55,7 @@ class RouteManager {
   /// - [route]: The [BaatoRouteResponse] containing route data to be drawn
   ///
   /// Throws an exception if no route data is found in the response.
-  void drawRoute(BaatoRouteResponse route) {
+  Future<void> drawRoute(BaatoRouteResponse route) async {
     if ((route.data ?? []).isEmpty) throw Exception("No result found");
     final routeData = route.data?[0];
     if (routeData == null) throw Exception("No route data found");
@@ -67,15 +66,42 @@ class RouteManager {
         longitude: geoCoord.longitude,
       ));
     }
-    _shapeManager.clearLines();
-    _shapeManager.addLine(
-      latLngList[0],
-      latLngList[1],
-      options: BaatoLineOptions(
-        lineColor: "#081E2A",
-        lineWidth: 10.0,
-        lineOpacity: 0.5,
-      ),
-    );
+    // Convert the list of coordinates into a GeoJSON LineString
+    final Map<String, dynamic> lineStringGeoJson = {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": latLngList
+            .map((coord) => [coord.longitude, coord.latitude])
+            .toList(),
+      },
+      "properties": {},
+    };
+    final isSourceExists = await _sourceAndLayerManager.sourceExists("route");
+    if (!isSourceExists) {
+      _mapLibreMapController.addGeoJsonSource(
+        "route",
+        lineStringGeoJson,
+      );
+    } else {
+      _mapLibreMapController.setGeoJsonSource(
+        "route",
+        lineStringGeoJson,
+      );
+    }
+    final isLayerExists = await _sourceAndLayerManager.layerExists("route");
+    if (!isLayerExists) {
+      _mapLibreMapController.addLayer(
+        "route",
+        "route",
+        LineLayerProperties(
+          lineColor: "#081E2A",
+          lineWidth: 10.0,
+          lineOpacity: 0.5,
+          lineJoin: "round",
+          lineCap: "round",
+        ),
+      );
+    }
   }
 }

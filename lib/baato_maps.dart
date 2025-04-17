@@ -8,6 +8,7 @@
 /// - [BaatoMapController]: Controller for map operations
 /// - Various utility widgets and style configurations
 /// - Integration with the Baato API for additional services
+library;
 
 export 'src/map/baato_map_widget.dart';
 export 'src/map/baato_map_controller.dart';
@@ -16,11 +17,4 @@ export 'package:baato_api/baato_api.dart';
 export 'src/model/baato_model.dart';
 export 'src/baato.dart';
 
-export 'package:maplibre_gl/maplibre_gl.dart'
-    show
-        LatLng,
-        CameraPosition,
-        LineOptions,
-        FillOptions,
-        SymbolOptions,
-        Symbol;
+export 'package:maplibre_gl/maplibre_gl.dart' hide Annotation;

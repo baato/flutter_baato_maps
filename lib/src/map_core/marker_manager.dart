@@ -1,7 +1,5 @@
 import 'dart:ui';
-
 import 'package:baato_maps/baato_maps.dart';
-import 'package:baato_maps/src/map_core/source_and_layer_manager.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 /// A manager class that handles marker operations for Baato Maps.
@@ -12,14 +10,12 @@ class MarkerManager {
   /// The underlying MapLibre map controller used for marker operations
   final MapLibreMapController _mapLibreMapController;
 
-  /// The source and layer manager for handling map sources and layers
-  final SourceAndLayerManager _sourceAndLayerManager;
-
   /// Creates a new MarkerManager with the specified controllers
   ///
   /// [_mapLibreMapController] is the MapLibre controller used for marker operations
-  /// [_sourceAndLayerManager] is the manager for map sources and layers
-  MarkerManager(this._mapLibreMapController, this._sourceAndLayerManager);
+  MarkerManager(
+    this._mapLibreMapController,
+  );
 
   /// Adds a marker to the map with the specified options.
   ///

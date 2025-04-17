@@ -74,7 +74,7 @@ class BaatoMapController {
     if (_controller == null) throw Exception('Controller not initialized');
     cameraManager = CameraManager(_controller!);
     sourceAndLayerManager = SourceAndLayerManager(_controller!);
-    markerManager = MarkerManager(_controller!, sourceAndLayerManager);
+    markerManager = MarkerManager(_controller!);
     shapeManager = ShapeManager(_controller!);
     geoJsonManager = GeoJsonManager(_controller!);
     coordinateConverter = CoordinateConverter(_controller!);

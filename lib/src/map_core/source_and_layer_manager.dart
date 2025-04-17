@@ -90,4 +90,16 @@ class SourceAndLayerManager {
   Future<void> removeLayer(String layerId) async {
     await _mapLibreMapController.removeLayer(layerId);
   }
+
+  /// check if a layer exists
+  Future<bool> layerExists(String layerId) async {
+    final layerIds = await _mapLibreMapController.getLayerIds();
+    return layerIds.contains(layerId);
+  }
+
+  /// check if a source exists
+  Future<bool> sourceExists(String sourceId) async {
+    final sourceIds = await _mapLibreMapController.getSourceIds();
+    return sourceIds.contains(sourceId);
+  }
 }
