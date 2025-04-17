@@ -70,7 +70,7 @@ class _RouteDetailBottomSheetWidgetState
         mode: BaatoDirectionMode.car,
         decodePolyline: true,
       );
-      widget.mapController.routeManager.drawRoute(route);
+      widget.mapController.routeManager.drawRouteFromResponse(route);
     }
   }
 

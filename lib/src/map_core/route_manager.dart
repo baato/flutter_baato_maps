@@ -1,8 +1,6 @@
 import 'package:baato_maps/baato_maps.dart';
-import 'package:baato_maps/src/map_core/marker_manager.dart';
-import 'package:baato_maps/src/map_core/shape_manager.dart';
+import 'package:baato_maps/src/constants/baato_markers.dart';
 import 'package:baato_maps/src/map_core/source_and_layer_manager.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 
 /// A manager class that handles route operations for Baato Maps.
 ///
@@ -12,12 +10,6 @@ class RouteManager {
   /// The underlying MapLibre map controller used for route operations
   final MapLibreMapController _mapLibreMapController;
 
-  /// The marker manager for handling map markers at route endpoints
-  final MarkerManager _markerManager;
-
-  /// The shape manager for handling route lines and other shapes
-  final ShapeManager _shapeManager;
-
   /// The source and layer manager for handling map sources and layers
   final SourceAndLayerManager _sourceAndLayerManager;
 
@@ -25,25 +17,138 @@ class RouteManager {
   ///
   /// [_mapLibreMapController] is the MapLibre controller used for map operations
   /// [_sourceAndLayerManager] is the manager for map sources and layers
-  RouteManager(this._mapLibreMapController, this._sourceAndLayerManager)
-      : _markerManager = MarkerManager(_mapLibreMapController),
-        _shapeManager = ShapeManager(_mapLibreMapController);
+  RouteManager(this._mapLibreMapController, this._sourceAndLayerManager);
 
-  /// Adds a simple route between two coordinates with markers at each endpoint.
+  /// Draws a route on the map from an array of route properties
   ///
-  /// This method creates a line connecting the start and end points and
-  /// places markers at both locations.
+  /// This method creates a GeoJSON LineString from the provided route properties
+  /// and draws it on the map as a route line.
+  ///
+  /// Parameters:
+  /// - [routeProperties]: List of [BaatoRouteProperties] that define the route
+  /// - [sourceId]: Optional custom source ID (defaults to the default route source)
+  /// - [layerId]: Optional custom layer ID (defaults to the default route layer)
+  Future<void> drawRoute(
+    BaatoRouteProperties routeProperties, {
+    String sourceId = defaultRouteSourceName,
+    String layerId = defaultRouteLayerName,
+  }) async {
+    if (routeProperties.coordinates.isEmpty) {
+      return;
+    }
+    await drawRouteFromGeoJson(
+      routeProperties.toGeoJson(),
+      sourceId: sourceId,
+      layerId: layerId,
+    );
+  }
+
+  /// Draws a route on the map from an array of route properties
+  ///
+  /// This method creates a GeoJSON LineString from the provided coordinates
+  /// and draws it on the map as a route line.
+  ///
+  /// Parameters:
+  /// - [routeProperties]: List of [BaatoRouteProperties] that define the route
+  /// - [sourceId]: Optional custom source ID (defaults to the default route source)
+  /// - [layerId]: Optional custom layer ID (defaults to the default route layer)
+  Future<void> drawRoutesFromProperties(
+    List<BaatoRouteProperties> routeProperties, {
+    String sourceId = defaultRouteSourceName,
+    String layerId = defaultRouteLayerName,
+  }) async {
+    if (routeProperties.isEmpty) {
+      return;
+    }
+    for (int i = 0; i < routeProperties.length; i++) {
+      final routeProperty = routeProperties[i];
+      final routeSourceId = i > 0 ? '${sourceId}_$i' : sourceId;
+      final routeLayerId = i > 0 ? '${layerId}_$i' : layerId;
+      await drawRouteFromGeoJson(
+        routeProperty.toGeoJson(),
+        sourceId: routeSourceId,
+        layerId: routeLayerId,
+      );
+    }
+  }
+
+  /// Draws a route on the map from a GeoJSON LineString
+  ///
+  /// This method clears existing lines and draws a new route line using
+  /// the coordinates from the GeoJSON LineString.
+  ///
+  /// Parameters:
+  /// - [geoJson]: The GeoJSON LineString to be drawn
+  /// - [sourceId]: Optional custom source ID (defaults to the default route source)
+  /// - [layerId]: Optional custom layer ID (defaults to the default route layer)
+  Future<void> drawRouteFromGeoJson(
+    Map<String, dynamic> geoJson, {
+    String sourceId = defaultRouteSourceName,
+    String layerId = defaultRouteLayerName,
+  }) async {
+    final isSourceExists = await _sourceAndLayerManager.sourceExists(sourceId);
+    if (isSourceExists) {
+      _mapLibreMapController.setGeoJsonSource(sourceId, geoJson);
+    } else {
+      _mapLibreMapController.addGeoJsonSource(sourceId, geoJson);
+    }
+    final lineLayerMap = geoJson['properties'];
+    final BaatoLineLayerProperties lineLayerProperties;
+    if (lineLayerMap == null) {
+      lineLayerProperties = const BaatoLineLayerProperties(
+        lineColor: "#081E2A",
+        lineWidth: 10.0,
+        lineOpacity: 0.5,
+        lineJoin: "round",
+        lineCap: "round",
+      );
+    } else {
+      lineLayerProperties = BaatoLineLayerProperties.fromJson(lineLayerMap);
+    }
+
+    final isLayerExists = await _sourceAndLayerManager.layerExists(layerId);
+    if (isLayerExists) {
+      _mapLibreMapController.setLayerProperties(layerId, lineLayerProperties);
+    } else {
+      _mapLibreMapController.addLayer(
+        sourceId,
+        layerId,
+        lineLayerProperties,
+      );
+    }
+  }
+
+  /// Draws a route between two coordinates using the Baato Directions API.
+  ///
+  /// This method fetches a route from the Baato API and draws it on the map.
   ///
   /// Parameters:
   /// - [start]: The starting coordinate of the route
   /// - [end]: The ending coordinate of the route
+  /// - [mode]: The transportation mode (car, bike, foot) - defaults to car
+  /// - [lineLayerProperties]: Optional styling properties for the route line
   ///
-  /// Returns a [Future] that completes when the route and markers have been added.
-  Future<void> addRoute(BaatoCoordinate start, BaatoCoordinate end) async {
-    final routePoints = [start, end];
-    await _shapeManager.addMultiLine(routePoints);
-    await _markerManager.addMarker(BaatoSymbolOption(geometry: start));
-    await _markerManager.addMarker(BaatoSymbolOption(geometry: end));
+  /// Returns a [Future] that completes when the route has been fetched and drawn.
+  Future<void> drawRouteBetweenCoordinates({
+    required BaatoCoordinate start,
+    required BaatoCoordinate end,
+    BaatoDirectionMode mode = BaatoDirectionMode.car,
+    BaatoLineLayerProperties? lineLayerProperties,
+  }) async {
+    final route = await Baato.api.direction.getRoutes(
+      startCoordinate: BaatoCoordinate(
+        latitude: start.latitude,
+        longitude: start.longitude,
+      ),
+      endCoordinate: BaatoCoordinate(
+        latitude: end.latitude,
+        longitude: end.longitude,
+      ),
+      mode: mode,
+      decodePolyline: true,
+    );
+    await drawRouteFromResponse(route,
+        lineLayerProperties: lineLayerProperties);
   }
 
   /// Draws a route on the map based on a Baato route response.
@@ -55,53 +160,32 @@ class RouteManager {
   /// - [route]: The [BaatoRouteResponse] containing route data to be drawn
   ///
   /// Throws an exception if no route data is found in the response.
-  Future<void> drawRoute(BaatoRouteResponse route) async {
+  Future<void> drawRouteFromResponse(
+    BaatoRouteResponse route, {
+    BaatoLineLayerProperties? lineLayerProperties,
+  }) async {
     if ((route.data ?? []).isEmpty) throw Exception("No result found");
     final routeData = route.data?[0];
     if (routeData == null) throw Exception("No route data found");
-    List<BaatoCoordinate> latLngList = [];
-    for (BaatoCoordinate geoCoord in routeData.coordinates ?? []) {
-      latLngList.add(BaatoCoordinate(
-        latitude: geoCoord.latitude,
-        longitude: geoCoord.longitude,
-      ));
-    }
-    // Convert the list of coordinates into a GeoJSON LineString
-    final Map<String, dynamic> lineStringGeoJson = {
-      "type": "Feature",
-      "geometry": {
-        "type": "LineString",
-        "coordinates": latLngList
-            .map((coord) => [coord.longitude, coord.latitude])
-            .toList(),
-      },
-      "properties": {},
-    };
-    final isSourceExists = await _sourceAndLayerManager.sourceExists("route");
-    if (!isSourceExists) {
-      _mapLibreMapController.addGeoJsonSource(
-        "route",
-        lineStringGeoJson,
-      );
-    } else {
-      _mapLibreMapController.setGeoJsonSource(
-        "route",
-        lineStringGeoJson,
-      );
-    }
-    final isLayerExists = await _sourceAndLayerManager.layerExists("route");
-    if (!isLayerExists) {
-      _mapLibreMapController.addLayer(
-        "route",
-        "route",
-        LineLayerProperties(
-          lineColor: "#081E2A",
-          lineWidth: 10.0,
-          lineOpacity: 0.5,
-          lineJoin: "round",
-          lineCap: "round",
-        ),
-      );
-    }
+
+    final routeProperties = BaatoRouteProperties(
+      coordinates: routeData.coordinates ?? [],
+      lineLayerProperties: lineLayerProperties,
+    );
+    await drawRoute(routeProperties);
+  }
+
+  /// Clears the custom route from the map
+  Future<void> clearCustomRoute(
+      {String sourceId = defaultRouteSourceName,
+      String layerId = defaultRouteLayerName}) async {
+    await _sourceAndLayerManager.removeSource(sourceId);
+    await _sourceAndLayerManager.removeLayer(layerId);
+  }
+
+  /// Clears the route from the map
+  Future<void> clearRoute() async {
+    await _sourceAndLayerManager.removeSource(defaultRouteSourceName);
+    await _sourceAndLayerManager.removeLayer(defaultRouteLayerName);
   }
 }

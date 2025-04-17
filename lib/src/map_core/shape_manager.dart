@@ -1,5 +1,5 @@
 import 'package:baato_maps/baato_maps.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:baato_maps/src/map_core/geo_json_manager.dart';
 
 /// A manager class that handles shape operations for Baato Maps.
 ///
@@ -10,10 +10,13 @@ class ShapeManager {
   /// The underlying MapLibre map controller used for shape operations
   final MapLibreMapController _mapLibreMapController;
 
+  /// The source and layer manager for handling map sources and layers
+  final GeoJsonManager _geoJsonManager;
+
   /// Creates a new ShapeManager with the specified MapLibre controller
   ///
   /// [_mapLibreMapController] is the MapLibre controller used for shape operations
-  ShapeManager(this._mapLibreMapController);
+  ShapeManager(this._mapLibreMapController, this._geoJsonManager);
 
   /// Gets the set of all fills (polygons) currently on the map
   Set<Fill> get fills => _mapLibreMapController.fills;
@@ -179,5 +182,77 @@ class ShapeManager {
   /// Returns a [Future] that completes when all fills have been removed.
   Future<void> clearFills() async {
     await _mapLibreMapController.clearFills();
+  }
+
+  /// Adds a line to the map with a specific layer ID.
+  ///
+  /// Parameters:
+  /// - [layerId]: The ID of the layer to add the line to
+  /// - [startPoint]: The starting coordinate of the line
+  /// - [endPoint]: The ending coordinate of the line
+  /// - [lineLayerProperties]: Optional styling options for the line
+  ///
+  /// Returns a [Future] that completes when the line has been added.
+  Future<void> addLineWithLayerId(
+    String layerId,
+    BaatoCoordinate startPoint,
+    BaatoCoordinate endPoint, {
+    BaatoLineLayerProperties? lineLayerProperties,
+  }) async {
+    await addMultiLineWithLayerId(
+      layerId,
+      [startPoint, endPoint],
+      lineLayerProperties: lineLayerProperties,
+    );
+  }
+
+  /// Adds a multi-line to the map with a specific layer ID.
+  ///
+  /// Parameters:
+  /// - [layerId]: The ID of the layer to add the multi-line to
+  /// - [points]: A list of coordinates that define the line path
+  /// - [lineLayerProperties]: Optional styling options for the line
+  ///
+  /// Returns a [Future] that completes when the multi-line has been added.
+  Future<void> addMultiLineWithLayerId(
+    String layerId,
+    List<BaatoCoordinate> points, {
+    BaatoLineLayerProperties? lineLayerProperties,
+  }) async {
+    final geoJson = {
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": points
+                .map((coord) => [coord.longitude, coord.latitude])
+                .toList(),
+          },
+          "properties": (lineLayerProperties ??
+                  BaatoLineLayerProperties(
+                    lineColor: "#000000",
+                    lineWidth: 6,
+                    lineOpacity: 1,
+                    lineCap: "round",
+                    lineJoin: "round",
+                    lineDasharray: [],
+                  ))
+              .toJson(),
+        },
+      ],
+    };
+    await _geoJsonManager.addGeoJson(layerId, geoJson);
+  }
+
+  /// Removes a layer from the map with a specific layer ID.
+  ///
+  /// Parameters:
+  /// - [layerId]: The ID of the layer to remove from the map
+  ///
+  /// Returns a [Future] that completes when the layer has been removed.
+  Future<void> removeLayer(String layerId) async {
+    await _geoJsonManager.removeGeoJson(layerId);
   }
 }

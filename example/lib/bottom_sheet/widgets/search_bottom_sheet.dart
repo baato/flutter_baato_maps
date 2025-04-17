@@ -283,7 +283,8 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
                   mode: BaatoDirectionMode.car,
                   decodePolyline: true,
                 );
-                BaatoMapView.mapController.routeManager.drawRoute(route);
+                BaatoMapView.mapController.routeManager
+                    .drawRouteFromResponse(route);
               },
             ),
           ],

@@ -71,12 +71,14 @@ class BaatoMapController {
   /// This method must be called before using any other functionality of this controller
   Future<void> setController(MapLibreMapController controller) async {
     _controller = controller;
-    if (_controller == null) throw Exception('Controller not initialized');
+    if (_controller == null) {
+      throw Exception('Baato Map Controller not initialized');
+    }
     cameraManager = CameraManager(_controller!);
     sourceAndLayerManager = SourceAndLayerManager(_controller!);
     markerManager = MarkerManager(_controller!);
-    shapeManager = ShapeManager(_controller!);
     geoJsonManager = GeoJsonManager(_controller!);
+    shapeManager = ShapeManager(_controller!, geoJsonManager);
     coordinateConverter = CoordinateConverter(_controller!);
     routeManager = RouteManager(_controller!, sourceAndLayerManager);
     await _addDefaultAssets();
@@ -86,13 +88,17 @@ class BaatoMapController {
   ///
   /// The listener will be called when map events occur
   Future<void> addListener(void Function() listener) async {
-    if (_controller == null) throw Exception('Controller not initialized');
+    if (_controller == null) {
+      throw Exception('Baato Map Controller not initialized');
+    }
     _controller!.addListener(listener);
   }
 
   /// Removes a previously added listener from the map controller
   Future<void> removeListener(void Function() listener) async {
-    if (_controller == null) throw Exception('Controller not initialized');
+    if (_controller == null) {
+      throw Exception('Baato Map Controller not initialized');
+    }
     _controller!.removeListener(listener);
   }
 
@@ -100,7 +106,9 @@ class BaatoMapController {
   ///
   /// This is useful when the map container size changes
   void forceResizeWebMap() async {
-    if (_controller == null) throw Exception('Controller not initialized');
+    if (_controller == null) {
+      throw Exception('Baato Map Controller not initialized');
+    }
     _controller!.forceResizeWebMap();
   }
 
@@ -119,7 +127,9 @@ class BaatoMapController {
   /// [name] is the identifier for the image that can be used in marker symbols
   /// [data] is the binary image data
   Future<void> addImageFromData(String name, ByteData data) async {
-    if (_controller == null) throw Exception('Controller not initialized');
+    if (_controller == null) {
+      throw Exception('Baato Map Controller not initialized');
+    }
     final Uint8List imageBytes = data.buffer.asUint8List();
     await _controller!.addImage(name, imageBytes);
   }

@@ -1,3 +1,9 @@
+/// The default route source name
+const String defaultRouteSourceName = "baato_route_source";
+
+/// The default route layer name
+const String defaultRouteLayerName = "baato_route_layer";
+
 /// Enum representing different marker assets available in the Baato Maps package.
 ///
 /// This enum provides access to marker image assets that can be used on the map.
