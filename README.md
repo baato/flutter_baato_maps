@@ -132,17 +132,7 @@ Baato Maps provides several built-in map styles that can be accessed through the
    - A grayscale map style that uses only black, white, and shades of gray
    - Access via `BaatoMapStyle.monochrome`
 
-4. Black and White Style:
-
-   - A high-contrast map style using only black and white colors
-   - Access via `BaatoMapStyle.blackWhite`
-
-5. Roads Style:
-
-   - A map style that emphasizes road networks and transportation features
-   - Access via `BaatoMapStyle.roads`
-
-6. Retro Style:
+4. Retro Style:
    - A vintage-inspired map style with a classic cartographic look
    - Access via `BaatoMapStyle.retro`
 

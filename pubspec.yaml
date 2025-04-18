@@ -1,6 +1,6 @@
 name: baato_maps
 description: "A Flutter package for Baato Maps. Baato Maps is a powerful and flexible mapping solution for Flutter applications."
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/baato/flutter_baato_maps
 license: MIT
 

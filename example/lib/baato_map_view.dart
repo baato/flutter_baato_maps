@@ -33,7 +33,7 @@ class BaatoMapView extends StatelessWidget {
             longitude: initialPosition.longitude,
           ),
           initialZoom: initialZoom,
-          style: style ?? BaatoMapStyle.breeze,
+          style: style ?? BaatoMapStyle.baatoLite,
           myLocationEnabled: true,
           onMapCreated: (controller) {
             BaatoMapView.mapController = controller;

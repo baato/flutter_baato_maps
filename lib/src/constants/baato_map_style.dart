@@ -11,6 +11,11 @@ abstract class BaatoMapStyle {
   /// This URL is used to load the map style from the Baato Maps API.
   String get styleURL;
 
+  /// The baato lite style map.
+  ///
+  /// A light and airy map style with subtle colors and clear typography.
+  static const baatoLite = _BaatoLiteStyle();
+
   /// The breeze style map.
   ///
   /// A light and airy map style with subtle colors and clear typography.
@@ -41,6 +46,15 @@ abstract class BaatoMapStyle {
   /// [styleURL] is the URL of the custom map style to be used.
   /// Returns a [_CustomStyle] instance with the specified style URL.
   static customStyle(String styleURL) => _CustomStyle(styleURL);
+}
+
+/// Implementation of the baato lite style map.
+class _BaatoLiteStyle implements BaatoMapStyle {
+  const _BaatoLiteStyle();
+
+  @override
+  String get styleURL =>
+      '${BaatoConstant.baseMapStyleUrl}baato_lite?key=${BaatoMapConfig.instance.apiKey}';
 }
 
 /// Implementation of the breeze style map.

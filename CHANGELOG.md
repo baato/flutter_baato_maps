@@ -12,3 +12,7 @@
 - Coordinate Conversion between screen and geographic coordinates
 - Layer Management to add and manage multiple map layers
 - Cross-Platform support for both iOS and Android
+
+## 1.0.1
+
+- Baato lite map style added by default

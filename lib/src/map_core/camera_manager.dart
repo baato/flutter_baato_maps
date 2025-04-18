@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:baato_maps/baato_maps.dart';
+import 'package:baato_api/baato_api.dart';
 import 'package:baato_maps/src/model/baato_camera_position.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
