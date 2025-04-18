@@ -52,6 +52,33 @@ class GeoJsonManager {
     }
   }
 
+  /// Adds a collection of GeoJSON features to the map.
+  ///
+  /// Iterates over each feature in the collection and adds it as a separate
+  /// GeoJSON source and layer, updating if they already exist.
+  Future<void> addFeatureCollectionGeoJson(
+    String sourceId,
+    String layerId,
+    BaatoFeatureCollectionGeoJson featureCollection,
+  ) async {
+    for (var i = 0; i < featureCollection.features.length; i++) {
+      final feature = featureCollection.features[i];
+      final sid = i == 0 ? sourceId : "$sourceId$i";
+      final lid = i == 0 ? layerId : "$layerId$i";
+      addGeoJson(
+        sourceId: sid,
+        layerId: lid,
+        geojson: feature,
+        updateIfSourceExist: true,
+        updateIfLayerExist: true,
+      );
+    }
+  }
+
+  /// Updates an existing GeoJSON source and layer with new data.
+  ///
+  /// This method ensures that the GeoJSON data is updated if the source
+  /// and layer already exist on the map.
   Future<void> updateGeoJson(
     String sourceId,
     String layerId,
@@ -66,6 +93,9 @@ class GeoJsonManager {
     );
   }
 
+  /// Removes a GeoJSON source and layer from the map.
+  ///
+  /// Checks if the source and layer exist before attempting to remove them.
   Future<void> removeGeoJson(String sourceId, String layerId) async {
     final isSourceExist =
         (await _mapLibreMapController.getSourceIds()).contains(sourceId);
@@ -79,6 +109,9 @@ class GeoJsonManager {
     }
   }
 
+  /// Sets a specific GeoJSON feature for a given source.
+  ///
+  /// This method allows updating a specific feature within a GeoJSON source.
   Future<void> setGeoJsonFeature(
     String sourceId,
     Map<String, dynamic> geojsonFeature,

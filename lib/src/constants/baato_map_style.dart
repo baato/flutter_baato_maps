@@ -26,11 +26,6 @@ abstract class BaatoMapStyle {
   /// A grayscale map style that uses only black, white, and shades of gray.
   static const monochrome = _MonochromeStyle();
 
-  /// The black and white style map.
-  ///
-  /// A high-contrast map style using only black and white colors.
-  static const blackWhite = _BlackWhiteStyle();
-
   /// The roads style map.
   ///
   /// A map style that emphasizes road networks and transportation features.
@@ -73,15 +68,6 @@ class _MonochromeStyle implements BaatoMapStyle {
   @override
   String get styleURL =>
       '${BaatoConstant.baseMapStyleUrl}monochrome?key=${BaatoMapConfig.instance.apiKey}';
-}
-
-/// Implementation of the black and white style map.
-class _BlackWhiteStyle implements BaatoMapStyle {
-  const _BlackWhiteStyle();
-
-  @override
-  String get styleURL =>
-      '${BaatoConstant.baseMapStyleUrl}black_white?key=${BaatoMapConfig.instance.apiKey}';
 }
 
 /// Implementation of the roads style map.
