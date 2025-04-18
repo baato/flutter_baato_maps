@@ -23,8 +23,7 @@ class MapScreen extends StatefulWidget {
 /// Manages the map style and bottom sheet controller, and builds
 /// the UI combining the map view with the appropriate bottom sheet content.
 class _MapScreenState extends State<MapScreen> {
-  final String _currentStyle =
-      'https://tileboundaries.baato.io/admin_boundary/baato_lite.json';
+  final BaatoMapStyle _currentStyle = BaatoMapStyle.breeze;
 
   final BottomSheetController _sheetController = BottomSheetController(
     bottomSheetType: SearchBottomSheet(),
@@ -33,44 +32,41 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _currentStyle.isNotEmpty
-          ? FlutterBottomSheet(
-              body: BaatoMapView(
-                initialPosition: BaatoCoordinate(
-                  latitude: 27.7172,
-                  longitude: 85.3240,
-                ),
-                styleUrl: _currentStyle,
-              ),
-              controller: _sheetController,
-              builder: (context, type) {
-                if (type is SearchBottomSheet) {
-                  return SearchBottomSheetWidget(
-                    controller: _sheetController,
-                    onSearch: (query) {},
-                    onSuggestionSelected: (suggestion) {},
-                    getSuggestions: (query) => [],
-                  );
-                } else if (type is PlaceDetailBottomSheet) {
-                  return PlaceDetailBottomSheetWidget(
-                    controller: _sheetController,
-                    title: type.title,
-                    address: type.address,
-                    distance: type.distance,
-                    coordinates: type.coordinates,
-                  );
-                } else if (type is RouteDetailBottomSheet) {
-                  return RouteDetailBottomSheetWidget(
-                    controller: _sheetController,
-                    mapController: BaatoMapView.mapController,
-                    destinationCoordinates: type.destinationCoordinates,
-                  );
-                }
+        body: FlutterBottomSheet(
+      body: BaatoMapView(
+        initialPosition: BaatoCoordinate(
+          latitude: 27.7172,
+          longitude: 85.3240,
+        ),
+        style: _currentStyle,
+      ),
+      controller: _sheetController,
+      builder: (context, type) {
+        if (type is SearchBottomSheet) {
+          return SearchBottomSheetWidget(
+            controller: _sheetController,
+            onSearch: (query) {},
+            onSuggestionSelected: (suggestion) {},
+            getSuggestions: (query) => [],
+          );
+        } else if (type is PlaceDetailBottomSheet) {
+          return PlaceDetailBottomSheetWidget(
+            controller: _sheetController,
+            title: type.title,
+            address: type.address,
+            distance: type.distance,
+            coordinates: type.coordinates,
+          );
+        } else if (type is RouteDetailBottomSheet) {
+          return RouteDetailBottomSheetWidget(
+            controller: _sheetController,
+            mapController: BaatoMapView.mapController,
+            destinationCoordinates: type.destinationCoordinates,
+          );
+        }
 
-                return Container();
-              },
-            )
-          : const Center(child: CircularProgressIndicator()),
-    );
+        return Container();
+      },
+    ));
   }
 }

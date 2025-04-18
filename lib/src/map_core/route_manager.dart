@@ -1,5 +1,5 @@
 import 'package:baato_maps/baato_maps.dart';
-import 'package:baato_maps/src/constants/baato_markers.dart';
+import 'package:baato_maps/src/constants/base_constant.dart';
 import 'package:baato_maps/src/map_core/source_and_layer_manager.dart';
 
 /// A manager class that handles route operations for Baato Maps.
@@ -30,8 +30,8 @@ class RouteManager {
   /// - [layerId]: Optional custom layer ID (defaults to the default route layer)
   Future<void> drawRoute(
     BaatoRouteProperties routeProperties, {
-    String sourceId = defaultRouteSourceName,
-    String layerId = defaultRouteLayerName,
+    String sourceId = BaatoConstant.defaultRouteSourceName,
+    String layerId = BaatoConstant.defaultRouteLayerName,
   }) async {
     if (routeProperties.coordinates.isEmpty) {
       return;
@@ -54,8 +54,8 @@ class RouteManager {
   /// - [layerId]: Optional custom layer ID (defaults to the default route layer)
   Future<void> drawRoutesFromProperties(
     List<BaatoRouteProperties> routeProperties, {
-    String sourceId = defaultRouteSourceName,
-    String layerId = defaultRouteLayerName,
+    String sourceId = BaatoConstant.defaultRouteSourceName,
+    String layerId = BaatoConstant.defaultRouteLayerName,
   }) async {
     if (routeProperties.isEmpty) {
       return;
@@ -83,8 +83,8 @@ class RouteManager {
   /// - [layerId]: Optional custom layer ID (defaults to the default route layer)
   Future<void> drawRouteFromGeoJson(
     Map<String, dynamic> geoJson, {
-    String sourceId = defaultRouteSourceName,
-    String layerId = defaultRouteLayerName,
+    String sourceId = BaatoConstant.defaultRouteSourceName,
+    String layerId = BaatoConstant.defaultRouteLayerName,
   }) async {
     final isSourceExists = await _sourceAndLayerManager.sourceExists(sourceId);
     if (isSourceExists) {
@@ -93,9 +93,9 @@ class RouteManager {
       _mapLibreMapController.addGeoJsonSource(sourceId, geoJson);
     }
     final lineLayerMap = geoJson['properties'];
-    final BaatoLineLayerProperties lineLayerProperties;
+    final LineLayerProperties lineLayerProperties;
     if (lineLayerMap == null) {
-      lineLayerProperties = const BaatoLineLayerProperties(
+      lineLayerProperties = const LineLayerProperties(
         lineColor: "#081E2A",
         lineWidth: 10.0,
         lineOpacity: 0.5,
@@ -103,7 +103,7 @@ class RouteManager {
         lineCap: "round",
       );
     } else {
-      lineLayerProperties = BaatoLineLayerProperties.fromJson(lineLayerMap);
+      lineLayerProperties = LineLayerProperties.fromJson(lineLayerMap);
     }
 
     final isLayerExists = await _sourceAndLayerManager.layerExists(layerId);
@@ -177,15 +177,17 @@ class RouteManager {
 
   /// Clears the custom route from the map
   Future<void> clearCustomRoute(
-      {String sourceId = defaultRouteSourceName,
-      String layerId = defaultRouteLayerName}) async {
+      {String sourceId = BaatoConstant.defaultRouteSourceName,
+      String layerId = BaatoConstant.defaultRouteLayerName}) async {
     await _sourceAndLayerManager.removeSource(sourceId);
     await _sourceAndLayerManager.removeLayer(layerId);
   }
 
   /// Clears the route from the map
   Future<void> clearRoute() async {
-    await _sourceAndLayerManager.removeSource(defaultRouteSourceName);
-    await _sourceAndLayerManager.removeLayer(defaultRouteLayerName);
+    await _sourceAndLayerManager
+        .removeSource(BaatoConstant.defaultRouteSourceName);
+    await _sourceAndLayerManager
+        .removeLayer(BaatoConstant.defaultRouteLayerName);
   }
 }

@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import 'package:baato_api/baato_api.dart';
+import 'package:baato_maps/src/constants/baato_map_style.dart';
 import 'package:baato_maps/src/constants/baato_markers.dart';
 import 'package:baato_maps/src/map_core/camera_manager.dart';
 import 'package:baato_maps/src/map_core/coordinate_converter.dart';
@@ -7,6 +11,7 @@ import 'package:baato_maps/src/map_core/route_manager.dart';
 import 'package:baato_maps/src/map_core/shape_manager.dart';
 import 'package:baato_maps/src/map_core/source_and_layer_manager.dart';
 import 'package:baato_maps/src/map_core/style_manager.dart';
+import 'package:baato_maps/src/model/baato_map_feature.dart';
 import 'package:flutter/services.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
@@ -52,8 +57,10 @@ class BaatoMapController {
 
   /// Creates a new BaatoMapController with the specified initial style
   ///
-  /// [initialStyle] is the map style URL or identifier to use when the map is first loaded
-  BaatoMapController(String initialStyle) {
+  /// [initialStyle] is the map style or identifier to use when the map is first loaded
+  BaatoMapController(
+    BaatoMapStyle initialStyle,
+  ) {
     styleManager = StyleManager(initialStyle: initialStyle);
   }
 
@@ -69,7 +76,10 @@ class BaatoMapController {
   /// Sets the underlying MapLibre controller and initializes all managers
   ///
   /// This method must be called before using any other functionality of this controller
-  Future<void> setController(MapLibreMapController controller) async {
+  Future<void> setController(
+    MapLibreMapController controller, {
+    List<String>? poiLayerContainIds,
+  }) async {
     _controller = controller;
     if (_controller == null) {
       throw Exception('Baato Map Controller not initialized');
@@ -78,10 +88,12 @@ class BaatoMapController {
     sourceAndLayerManager = SourceAndLayerManager(_controller!);
     markerManager = MarkerManager(_controller!);
     geoJsonManager = GeoJsonManager(_controller!);
-    shapeManager = ShapeManager(_controller!, geoJsonManager);
+    shapeManager = ShapeManager(_controller!);
     coordinateConverter = CoordinateConverter(_controller!);
     routeManager = RouteManager(_controller!, sourceAndLayerManager);
     await _addDefaultAssets();
+    _poiLayers =
+        await findPOILayers(poiLayerContainIds ?? const ["Poi", "BusStop"]);
   }
 
   /// Adds a listener to the map controller
@@ -138,6 +150,62 @@ class BaatoMapController {
   ///
   /// This provides direct access to the underlying MapLibre functionality
   MapLibreMapController? get rawController => _controller;
+
+  List<String> _poiLayers = [];
+
+  /// Queries the map for features at the given screen point.
+  ///
+  /// Returns a list of [BaatoMapFeature] objects representing the map features
+  /// found at the specified point.
+  Future<List<BaatoMapFeature>> queryPOIFeatures(
+    Point<double> point, {
+    BaatoCoordinate? sourceCoordinate,
+  }) async {
+    final mapLibreController = rawController;
+    if (mapLibreController == null) return [];
+
+    List<dynamic> mapFeatures = await mapLibreController.queryRenderedFeatures(
+      point,
+      _poiLayers,
+      null,
+    );
+
+    final features = mapFeatures
+        .map(
+          (e) => BaatoMapFeature.fromMapFeature(e, sourceCoordinate),
+        )
+        .toList();
+
+    return features;
+  }
+
+  /// Finds and stores POI layers in the current map style.
+  ///
+  /// This method queries the map for all layer IDs and filters them based on
+  /// the prefixes specified in [poiLayerContainIds].
+  Future<List<String>> findPOILayers(List<String> poiLayerContainIds) async {
+    final mapLibreController = rawController;
+    if (mapLibreController == null) return [];
+
+    List<String> layers = (await mapLibreController.getLayerIds())
+        .map((e) => e.toString())
+        .toList();
+
+    List<String> poiLayers = layers
+        .where(
+          (layer) => poiLayerContainIds.any(
+            (text) => layer.startsWith(text),
+          ),
+        )
+        .toList();
+
+    _poiLayers = poiLayers;
+    if (poiLayers.isEmpty) {
+      return [];
+    }
+
+    return poiLayers;
+  }
 
   /// Disposes the controller and releases resources
   void dispose() {

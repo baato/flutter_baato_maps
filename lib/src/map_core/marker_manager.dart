@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:baato_maps/baato_maps.dart';
+import 'package:baato_maps/src/model/baato_model.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 /// A manager class that handles marker operations for Baato Maps.

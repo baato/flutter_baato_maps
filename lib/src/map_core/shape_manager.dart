@@ -1,51 +1,59 @@
 import 'package:baato_maps/baato_maps.dart';
-import 'package:baato_maps/src/map_core/geo_json_manager.dart';
 
-/// A manager class that handles shape operations for Baato Maps.
+/// Manages shape operations for Baato Maps.
 ///
-/// This class provides methods to add, remove, and clear various shapes on the map,
-/// including lines, circles, and fills (polygons). It works with the underlying
-/// MapLibre map controller to manage these map elements.
+/// Provides methods to add, remove, and clear various shapes on the map,
+/// such as lines, circles, and fills (polygons), using the MapLibre map controller.
 class ShapeManager {
-  /// The underlying MapLibre map controller used for shape operations
+  /// The MapLibre map controller for shape operations.
   final MapLibreMapController _mapLibreMapController;
 
-  /// The source and layer manager for handling map sources and layers
-  final GeoJsonManager _geoJsonManager;
-
-  /// Creates a new ShapeManager with the specified MapLibre controller
+  /// Constructs a ShapeManager with the given MapLibre controller.
   ///
-  /// [_mapLibreMapController] is the MapLibre controller used for shape operations
-  ShapeManager(this._mapLibreMapController, this._geoJsonManager);
+  /// [_mapLibreMapController] is the MapLibre controller for shape operations.
+  ShapeManager(this._mapLibreMapController);
 
-  /// Gets the set of all fills (polygons) currently on the map
+  final Map<String, Line> _lineIds = {};
+  final Map<String, Fill> _fillIds = {};
+  final Map<String, Circle> _circleIds = {};
+
+  /// Retrieves the list of shape IDs for lines currently managed by the ShapeManager.
+  List<String> get shapeLineIds => _lineIds.keys.toList();
+
+  /// Retrieves the list of shape IDs for fills currently managed by the ShapeManager.
+  List<String> get shapeFillIds => _fillIds.keys.toList();
+
+  /// Retrieves the list of shape IDs for circles currently managed by the ShapeManager.
+  List<String> get shapeCircleIds => _circleIds.keys.toList();
+
+  /// Retrieves all fills (polygons) currently on the map.
   Set<Fill> get fills => _mapLibreMapController.fills;
 
-  /// Gets the set of all lines currently on the map
+  /// Retrieves all lines currently on the map.
   Set<Line> get lines => _mapLibreMapController.lines;
 
-  /// Gets the set of all circles currently on the map
+  /// Retrieves all circles currently on the map.
   Set<Circle> get circles => _mapLibreMapController.circles;
 
-  /// Callbacks that are triggered when a fill is tapped
+  /// Callbacks triggered when a fill is tapped.
   ArgumentCallbacks<Fill> get onFillTapped =>
       _mapLibreMapController.onFillTapped;
 
-  /// Callbacks that are triggered when a line is tapped
+  /// Callbacks triggered when a line is tapped.
   ArgumentCallbacks<Line> get onLineTapped =>
       _mapLibreMapController.onLineTapped;
 
-  /// Callbacks that are triggered when a circle is tapped
+  /// Callbacks triggered when a circle is tapped.
   ArgumentCallbacks<Circle> get onCircleTapped =>
       _mapLibreMapController.onCircleTapped;
 
   /// Adds a line to the map between two points.
   ///
   /// Parameters:
-  /// - [startPoint]: The starting coordinate of the line
-  /// - [endPoint]: The ending coordinate of the line
-  /// - [options]: Optional styling options for the line
-  /// - [data]: Optional additional data to associate with the line
+  /// - [startPoint]: The starting coordinate of the line.
+  /// - [endPoint]: The ending coordinate of the line.
+  /// - [options]: Optional styling options for the line.
+  /// - [data]: Optional additional data to associate with the line.
   ///
   /// Returns a [Future] that completes with the created [Line] object,
   /// which can be used to update or remove the line later.
@@ -63,9 +71,9 @@ class ShapeManager {
   /// Adds a multi-point line to the map.
   ///
   /// Parameters:
-  /// - [points]: A list of coordinates that define the line path
-  /// - [options]: Optional styling options for the line
-  /// - [data]: Optional additional data to associate with the line
+  /// - [points]: A list of coordinates that define the line path.
+  /// - [options]: Optional styling options for the line.
+  /// - [data]: Optional additional data to associate with the line.
   ///
   /// Returns a [Future] that completes with the created [Line] object.
   /// Throws an [ArgumentError] if fewer than 3 points are provided.
@@ -85,7 +93,7 @@ class ShapeManager {
   /// Removes a line from the map.
   ///
   /// Parameters:
-  /// - [line]: The [Line] object to remove from the map
+  /// - [line]: The [Line] object to remove from the map.
   ///
   /// Returns a [Future] that completes when the line has been removed.
   Future<void> removeLine(Line line) async {
@@ -102,8 +110,8 @@ class ShapeManager {
   /// Adds a circle to the map.
   ///
   /// Parameters:
-  /// - [options]: The [BaatoCircleOptions] defining the circle's appearance and position
-  /// - [data]: Optional additional data to associate with the circle
+  /// - [options]: The [BaatoCircleOptions] defining the circle's appearance and position.
+  /// - [data]: Optional additional data to associate with the circle.
   ///
   /// Returns a [Future] that completes with the created [Circle] object,
   /// which can be used to update or remove the circle later.
@@ -118,7 +126,7 @@ class ShapeManager {
   /// Removes a circle from the map.
   ///
   /// Parameters:
-  /// - [circle]: The [Circle] object to remove from the map
+  /// - [circle]: The [Circle] object to remove from the map.
   ///
   /// Returns a [Future] that completes when the circle has been removed.
   Future<void> removeCircle(Circle circle) async {
@@ -135,9 +143,9 @@ class ShapeManager {
   /// Adds a fill (polygon) to the map.
   ///
   /// Parameters:
-  /// - [points]: A list of coordinates that define the polygon boundary
-  /// - [options]: Optional styling options for the fill
-  /// - [data]: Optional additional data to associate with the fill
+  /// - [points]: A list of coordinates that define the polygon boundary.
+  /// - [options]: Optional styling options for the fill.
+  /// - [data]: Optional additional data to associate with the fill.
   ///
   /// Returns a [Future] that completes with the created [Fill] object,
   /// which can be used to update or remove the fill later.
@@ -153,9 +161,9 @@ class ShapeManager {
   /// Adds a multi-polygon fill to the map.
   ///
   /// Parameters:
-  /// - [points]: A list of lists of coordinates that define multiple polygon boundaries
-  /// - [options]: Optional styling options for the fill
-  /// - [data]: Optional additional data to associate with the fill
+  /// - [points]: A list of lists of coordinates that define multiple polygon boundaries.
+  /// - [options]: Optional styling options for the fill.
+  /// - [data]: Optional additional data to associate with the fill.
   ///
   /// Returns a [Future] that completes with the created [Fill] object.
   Future<Fill> addMultiFill(
@@ -170,7 +178,7 @@ class ShapeManager {
   /// Removes a fill from the map.
   ///
   /// Parameters:
-  /// - [fill]: The [Fill] object to remove from the map
+  /// - [fill]: The [Fill] object to remove from the map.
   ///
   /// Returns a [Future] that completes when the fill has been removed.
   Future<void> removeFill(Fill fill) async {
@@ -184,75 +192,147 @@ class ShapeManager {
     await _mapLibreMapController.clearFills();
   }
 
-  /// Adds a line to the map with a specific layer ID.
+  /// Adds a line to the map with a specific shape ID.
   ///
   /// Parameters:
-  /// - [layerId]: The ID of the layer to add the line to
-  /// - [startPoint]: The starting coordinate of the line
-  /// - [endPoint]: The ending coordinate of the line
-  /// - [lineLayerProperties]: Optional styling options for the line
+  /// - [shapeId]: The ID of the shape to add the line to.
+  /// - [startPoint]: The starting coordinate of the line.
+  /// - [endPoint]: The ending coordinate of the line.
+  /// - [options]: Optional styling options for the line.
   ///
   /// Returns a [Future] that completes when the line has been added.
-  Future<void> addLineWithLayerId(
-    String layerId,
+  Future<Line> addLineWithId(
+    String shapeId,
     BaatoCoordinate startPoint,
     BaatoCoordinate endPoint, {
-    BaatoLineLayerProperties? lineLayerProperties,
+    BaatoLineOptions? options,
   }) async {
-    await addMultiLineWithLayerId(
-      layerId,
-      [startPoint, endPoint],
-      lineLayerProperties: lineLayerProperties,
+    final line = await addLine(
+      startPoint,
+      endPoint,
+      options: options,
     );
+    _lineIds[shapeId] = line;
+    return line;
   }
 
-  /// Adds a multi-line to the map with a specific layer ID.
+  /// Adds a multi-point line to the map with a specific shape ID.
   ///
   /// Parameters:
-  /// - [layerId]: The ID of the layer to add the multi-line to
-  /// - [points]: A list of coordinates that define the line path
-  /// - [lineLayerProperties]: Optional styling options for the line
+  /// - [shapeId]: The ID of the shape to add the line to.
+  /// - [points]: A list of coordinates that define the line path.
+  /// - [options]: Optional styling options for the line.
   ///
-  /// Returns a [Future] that completes when the multi-line has been added.
-  Future<void> addMultiLineWithLayerId(
-    String layerId,
+  /// Returns a [Future] that completes when the line has been added.
+  Future<Line> addMultiLineWithId(
+    String shapeId,
     List<BaatoCoordinate> points, {
-    BaatoLineLayerProperties? lineLayerProperties,
+    BaatoLineOptions? options,
   }) async {
-    final geoJson = {
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "LineString",
-            "coordinates": points
-                .map((coord) => [coord.longitude, coord.latitude])
-                .toList(),
-          },
-          "properties": (lineLayerProperties ??
-                  BaatoLineLayerProperties(
-                    lineColor: "#000000",
-                    lineWidth: 6,
-                    lineOpacity: 1,
-                    lineCap: "round",
-                    lineJoin: "round",
-                    lineDasharray: [],
-                  ))
-              .toJson(),
-        },
-      ],
-    };
-    await _geoJsonManager.addGeoJson(layerId, geoJson);
+    final line = await addMultiLine(points, options: options);
+    _lineIds[shapeId] = line;
+    return line;
   }
 
-  /// Removes a layer from the map with a specific layer ID.
+  /// Adds a fill (polygon) to the map with a specific shape ID.
   ///
   /// Parameters:
-  /// - [layerId]: The ID of the layer to remove from the map
+  /// - [shapeId]: The ID of the shape to add the fill to.
+  /// - [points]: A list of coordinates that define the polygon boundary.
+  /// - [options]: Optional styling options for the fill.
   ///
-  /// Returns a [Future] that completes when the layer has been removed.
-  Future<void> removeLayer(String layerId) async {
-    await _geoJsonManager.removeGeoJson(layerId);
+  /// Returns a [Future] that completes when the fill has been added.
+  Future<Fill> addFillWithId(
+    String shapeId,
+    List<BaatoCoordinate> points, {
+    BaatoFillOptions? options,
+  }) async {
+    final fill = await addFill(points, options: options);
+    _fillIds[shapeId] = fill;
+    return fill;
+  }
+
+  /// Adds a multi-polygon fill to the map with a specific shape ID.
+  ///
+  /// Parameters:
+  /// - [shapeId]: The ID of the shape to add the fill to.
+  /// - [points]: A list of lists of coordinates that define multiple polygon boundaries.
+  /// - [options]: Optional styling options for the fill.
+  ///
+  /// Returns a [Future] that completes when the fill has been added.
+  Future<Fill> addMultiFillWithId(
+    String shapeId,
+    List<List<BaatoCoordinate>> points, {
+    BaatoFillOptions? options,
+  }) async {
+    final fill = await addMultiFill(points, options: options);
+    _fillIds[shapeId] = fill;
+    return fill;
+  }
+
+  /// Adds a circle to the map with a specific shape ID.
+  ///
+  /// Parameters:
+  /// - [shapeId]: The ID of the shape to add the circle to.
+  /// - [options]: The [BaatoCircleOptions] defining the circle's appearance and position.
+  /// - [data]: Optional additional data to associate with the circle.
+  ///
+  /// Returns a [Future] that completes when the circle has been added.
+  Future<Circle> addCircleWithId(
+    String shapeId,
+    BaatoCircleOptions options, {
+    Map<dynamic, dynamic>? data,
+  }) async {
+    final circle = await addCircle(options, data: data);
+    _circleIds[shapeId] = circle;
+    return circle;
+  }
+
+  /// Removes a line from the map with a specific shape ID.
+  ///
+  /// Parameters:
+  /// - [shapeId]: The ID of the shape to remove from the map.
+  ///
+  /// Returns a [Future] that completes when the shape has been removed.
+  Future<Line?> removeLineWithId(String shapeId) async {
+    if (_lineIds.containsKey(shapeId)) {
+      final line = _lineIds[shapeId];
+      await removeLine(line!);
+      _lineIds.remove(shapeId);
+      return line;
+    }
+    return null;
+  }
+
+  /// Removes a fill from the map with a specific shape ID.
+  ///
+  /// Parameters:
+  /// - [shapeId]: The ID of the shape to remove from the map.
+  ///
+  /// Returns a [Future] that completes when the shape has been removed.
+  Future<Fill?> removeFillWithId(String shapeId) async {
+    if (_fillIds.containsKey(shapeId)) {
+      final fill = _fillIds[shapeId];
+      await removeFill(fill!);
+      _fillIds.remove(shapeId);
+      return fill;
+    }
+    return null;
+  }
+
+  /// Removes a circle from the map with a specific shape ID.
+  ///
+  /// Parameters:
+  /// - [shapeId]: The ID of the shape to remove from the map.
+  ///
+  /// Returns a [Future] that completes when the shape has been removed.
+  Future<Circle?> removeCircleWithId(String shapeId) async {
+    if (_circleIds.containsKey(shapeId)) {
+      final circle = _circleIds[shapeId];
+      await removeCircle(circle!);
+      _circleIds.remove(shapeId);
+      return circle;
+    }
+    return null;
   }
 }

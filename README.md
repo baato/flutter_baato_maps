@@ -4,7 +4,7 @@ A comprehensive Flutter package for integrating Baato Maps into your application
 
 ## Features
 
-- **Interactive Map Display**: Easily integrate interactive maps with the `BaatoMapWidget`
+- **Interactive Map Display**: Easily integrate interactive maps with the `BaatoMap` widget
 - **Custom Map Styles**: Support for multiple map styles including breeze and monochrome
 - **Location Services**: Built-in support for user location tracking and updates
 - **Place Search**: Integrated place search with auto-suggestions using `BaatoPlaceAutoSuggestion`
@@ -52,13 +52,12 @@ void main() {
 ### Display a Simple Map
 
 ```dart
-BaatoMapWidget(
+BaatoMap(
   initialPosition: BaatoCoordinate(
     latitude: 27.7172,
     longitude: 85.3240,
   ),
   initialZoom: 12.0,
-  initialStyle: 'https://api.baato.io/api/v1/styles/breeze?key=YOUR_API_KEY',
   myLocationEnabled: true,
   onMapCreated: (BaatoMapController controller) {
     // Store controller for later use
@@ -116,19 +115,38 @@ mapController.shapeManager.addCircle(
 
 ## Available Map Styles
 
-Baato Maps provides several built-in map styles:
+Baato Maps provides several built-in map styles that can be accessed through the `BaatoMapStyle` class:
 
 1. Breeze Style:
 
-```
-https://api.baato.io/api/v1/styles/breeze?key=YOUR_API_KEY
-```
+   - A light and airy map style with subtle colors and clear typography
+   - Access via `BaatoMapStyle.breeze`
 
-2. Monochrome Style:
+2. Dark Style:
 
-```
-https://api.baato.io/api/v1/styles/monochrome?key=YOUR_API_KEY
-```
+   - A dark-themed map style with high contrast and reduced eye strain
+   - Access via `BaatoMapStyle.dark`
+
+3. Monochrome Style:
+
+   - A grayscale map style that uses only black, white, and shades of gray
+   - Access via `BaatoMapStyle.monochrome`
+
+4. Black and White Style:
+
+   - A high-contrast map style using only black and white colors
+   - Access via `BaatoMapStyle.blackWhite`
+
+5. Roads Style:
+
+   - A map style that emphasizes road networks and transportation features
+   - Access via `BaatoMapStyle.roads`
+
+6. Retro Style:
+   - A vintage-inspired map style with a classic cartographic look
+   - Access via `BaatoMapStyle.retro`
+
+You can also create a custom style using:
 
 ## Advanced Features
 
@@ -146,15 +164,6 @@ mapController.sourceAndLayerManager.addLayer(
   "custom-source",
   "custom-layer",
   // Layer properties
-);
-```
-
-### Route Management
-
-```dart
-mapController.routeManager.showRoute(
-  startPoint: BaatoCoordinate(latitude: 27.7172, longitude: 85.3240),
-  endPoint: BaatoCoordinate(latitude: 27.7180, longitude: 85.3245),
 );
 ```
 

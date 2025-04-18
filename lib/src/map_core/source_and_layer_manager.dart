@@ -81,6 +81,23 @@ class SourceAndLayerManager {
     );
   }
 
+  /// Updates the properties of an existing layer.
+  ///
+  /// Parameters:
+  /// - [layerId]: The identifier of the layer to update
+  /// - [layerProperties]: The new properties to apply to the layer
+  ///
+  /// Returns a [Future] that completes when the layer properties have been updated.
+  Future<void> updateLayerProperties(
+    String layerId,
+    BaatoLayerProperties layerProperties,
+  ) async {
+    await _mapLibreMapController.setLayerProperties(
+      layerId,
+      layerProperties,
+    );
+  }
+
   /// Adds a line layer to the map.
   ///
   /// Parameters:

@@ -1,3 +1,4 @@
+import 'package:baato_maps/src/model/baato_geojson.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 class GeoJsonManager {
@@ -12,60 +13,70 @@ class GeoJsonManager {
   /// - [geojson]: The GeoJSON data to add
   /// - [promoteId]: Optional ID to promote the source to
   ///
-  Future<void> addGeoJson(
-    String sourceId,
-    Map<String, dynamic> geojson, {
-    String? promoteId,
+  Future<void> addGeoJson({
+    required String sourceId,
+    required String layerId,
+    required BaatoGeoJson geojson,
+    bool updateIfSourceExist = false,
+    bool updateIfLayerExist = false,
   }) async {
-    if (geojson['features'] == null) {
-      throw ArgumentError('geojson must contain a features property');
-    }
-    if (geojson['features'].length == 0) {
-      throw ArgumentError('geojson must contain at least one feature');
-    }
-
-    if (geojson['features'][0]['geometry'] == null) {
-      throw ArgumentError('geojson must contain a geometry property');
-    }
-
-    if (geojson['features'][0]['geometry']['type'] != 'LineString') {
-      throw ArgumentError('geojson must contain a LineString geometry');
-    }
-
-    if (geojson['features'][0]['geometry']['coordinates'] == null) {
-      throw ArgumentError('geojson must contain a coordinates property');
+    final isSourceExist =
+        (await _mapLibreMapController.getSourceIds()).contains(sourceId);
+    if (!isSourceExist) {
+      await _mapLibreMapController.addGeoJsonSource(
+        sourceId,
+        geojson.toGeoJson(),
+      );
+    } else if (updateIfSourceExist) {
+      await _mapLibreMapController.setGeoJsonSource(
+        sourceId,
+        geojson.toGeoJson(),
+      );
     }
 
-    if (geojson['features'][0]['geometry']['coordinates'].length == 0) {
-      throw ArgumentError('geojson must contain at least one coordinate');
+    if (geojson.properties != null) {
+      final isLayerExist =
+          (await _mapLibreMapController.getLayerIds()).contains(layerId);
+      if (!isLayerExist) {
+        await _mapLibreMapController.addLayer(
+          sourceId,
+          layerId,
+          geojson.properties!,
+        );
+      } else if (updateIfLayerExist) {
+        await _mapLibreMapController.setLayerProperties(
+          layerId,
+          geojson.properties!,
+        );
+      }
     }
-
-    if (geojson['features'][0]['properties'] == null) {
-      throw ArgumentError('geojson must contain a properties property');
-    }
-
-    if (geojson['features'][0]['properties'].length == 0) {
-      throw ArgumentError('geojson must contain at least one property');
-    }
-    return _mapLibreMapController.addGeoJsonSource(
-      sourceId,
-      geojson,
-      promoteId: promoteId,
-    );
   }
 
   Future<void> updateGeoJson(
     String sourceId,
-    Map<String, dynamic> geojson,
+    String layerId,
+    BaatoGeoJson geojson,
   ) async {
-    return _mapLibreMapController.setGeoJsonSource(
-      sourceId,
-      geojson,
+    return addGeoJson(
+      sourceId: sourceId,
+      layerId: layerId,
+      geojson: geojson,
+      updateIfSourceExist: true,
+      updateIfLayerExist: true,
     );
   }
 
-  Future<void> removeGeoJson(String sourceId) async {
-    return _mapLibreMapController.removeSource(sourceId);
+  Future<void> removeGeoJson(String sourceId, String layerId) async {
+    final isSourceExist =
+        (await _mapLibreMapController.getSourceIds()).contains(sourceId);
+    if (isSourceExist) {
+      return _mapLibreMapController.removeSource(sourceId);
+    }
+    final isLayerExist =
+        (await _mapLibreMapController.getLayerIds()).contains(layerId);
+    if (isLayerExist) {
+      return _mapLibreMapController.removeLayer(layerId);
+    }
   }
 
   Future<void> setGeoJsonFeature(

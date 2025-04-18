@@ -10,11 +10,11 @@
 /// - Integration with the Baato API for additional services
 library;
 
-export 'src/map/baato_map_widget.dart';
+export 'src/map/baato_map.dart';
 export 'src/map/baato_map_controller.dart';
 export 'src/widgets/widgets.dart';
 export 'package:baato_api/baato_api.dart';
 export 'src/model/baato_model.dart';
 export 'src/baato.dart';
-
+export 'src/constants/baato_map_style.dart';
 export 'package:maplibre_gl/maplibre_gl.dart' hide Annotation;

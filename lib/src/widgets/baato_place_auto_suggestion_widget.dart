@@ -234,7 +234,12 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
       suggestionsBuilder: _searchPlaces,
       debounceDuration: widget.debounceDuration,
       hintText: widget.hintText,
-      inputDecoration: widget.inputDecoration,
+      inputDecoration: widget.inputDecoration?.copyWith(
+            hintText: widget.hintText,
+          ) ??
+          InputDecoration(
+            hintText: widget.hintText,
+          ),
       maxSuggestions: widget.limit,
       showClearButton: true,
       autofocus: false,

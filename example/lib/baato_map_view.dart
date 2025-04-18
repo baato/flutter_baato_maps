@@ -4,7 +4,7 @@ import 'package:baato_maps/baato_maps.dart';
 class BaatoMapView extends StatelessWidget {
   final BaatoCoordinate initialPosition;
   final double initialZoom;
-  final String? styleUrl;
+  final BaatoMapStyle? style;
   final bool myLocationEnabled;
   static late BaatoMapController mapController;
   static List<BaatoCoordinate> markers = [];
@@ -13,26 +13,27 @@ class BaatoMapView extends StatelessWidget {
     Key? key,
     required this.initialPosition,
     this.initialZoom = 12.0,
-    this.styleUrl,
+    this.style,
     this.myLocationEnabled = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if (styleUrl == null) {
+    if (style == null) {
       return const Center(
-        child: Text('Please provide a style URL'),
+        child: Text('Please provide a style'),
       );
     }
     return Stack(
       children: [
-        BaatoMapWidget(
+        BaatoMap(
+          key: ValueKey("baato_map"),
           initialPosition: BaatoCoordinate(
             latitude: initialPosition.latitude,
             longitude: initialPosition.longitude,
           ),
           initialZoom: initialZoom,
-          initialStyle: styleUrl!,
+          style: style ?? BaatoMapStyle.breeze,
           myLocationEnabled: true,
           onMapCreated: (controller) {
             BaatoMapView.mapController = controller;
