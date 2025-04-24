@@ -66,7 +66,9 @@ class BaatoVectorSourceProperties implements BaatoSourceProperties {
   final String? attribution;
 
   /// A property to use as a feature id (for feature state). Either a
+  // ignore: unintended_html_in_doc_comment
   /// property name, or an object of the form `{<sourceLayer>:
+  // ignore: unintended_html_in_doc_comment
   /// <propertyName>}`. If specified as a string for a vector tile source,
   /// the same property is used across all its source layers.
   ///
@@ -527,7 +529,9 @@ class BaatoGeojsonSourceProperties implements BaatoSourceProperties {
   final bool? generateId;
 
   /// A property to use as a feature id (for feature state). Either a
+  // ignore: unintended_html_in_doc_comment
   /// property name, or an object of the form `{<sourceLayer>:
+  // ignore: unintended_html_in_doc_comment
   /// <propertyName>}`.
   ///
   /// Type: promoteId

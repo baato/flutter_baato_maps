@@ -37,7 +37,7 @@ class RouteManager {
       return;
     }
     await drawRouteFromGeoJson(
-      routeProperties.toGeoJson(),
+      routeProperties.toGeoJson(wrappedWithFeatureCollection: true),
       sourceId: sourceId,
       layerId: layerId,
     );

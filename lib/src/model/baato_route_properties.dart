@@ -41,9 +41,12 @@ class BaatoRouteProperties {
 
   /// Converts the route properties to a GeoJSON object.
   ///
+  // ignore: unintended_html_in_doc_comment
   /// Returns a Map<String, dynamic> representing the GeoJSON object.
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       "type": "Feature",
       "geometry": {
         "type": "LineString",
@@ -53,5 +56,14 @@ class BaatoRouteProperties {
       },
       "properties": lineLayerProperties.toJson(),
     };
+
+    if (wrappedWithFeatureCollection) {
+      return {
+        'type': 'FeatureCollection',
+        'features': [featureJson]
+      };
+    }
+
+    return featureJson;
   }
 }

@@ -33,6 +33,7 @@ class MarkerManager {
     option = option.copyWith(
         iconOffset: option.iconOffset ?? const Offset(0, -10),
         textOffset: option.textOffset ?? const Offset(0, 0.8));
+
     return await _mapLibreMapController.addSymbol(
         option.toSymbolOptions(), data);
   }
