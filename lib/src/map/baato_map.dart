@@ -2,11 +2,13 @@ import 'dart:math';
 
 import 'package:baato_api/baato_api.dart';
 import 'package:baato_maps/src/constants/baato_map_style.dart';
+import 'package:baato_maps/src/constants/baato_markers.dart';
 import 'package:baato_maps/src/model/baato_map_feature.dart';
 import 'package:baato_maps/src/model/baato_camera_position.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:baato_maps/src/map/baato_map_controller.dart';
 
@@ -236,6 +238,84 @@ class BaatoMap extends StatelessWidget {
   /// The controller for the Baato map.
   final BaatoMapController _baatoController;
 
+  List<String> _poiLayers = [];
+
+  /// Adds default assets to the map
+  ///
+  /// This includes the default Baato marker icon
+  Future<void> _addDefaultAssets() async {
+    final ByteData bytes = await rootBundle.load(
+      BaatoMarker.baatoDefault.assetPath,
+    );
+    await addImageFromData("baato_marker", bytes);
+  }
+
+  /// Adds an image to the map from binary data
+  ///
+  /// [name] is the identifier for the image that can be used in marker symbols
+  /// [data] is the binary image data
+  Future<void> addImageFromData(String name, ByteData data) async {
+    if (_baatoController.controller == null) {
+      throw Exception('Baato Map Controller not initialized');
+    }
+    final Uint8List imageBytes = data.buffer.asUint8List();
+    await _baatoController.controller!.addImage(name, imageBytes);
+  }
+
+  /// Finds and stores POI layers in the current map style.
+  ///
+  /// This method queries the map for all layer IDs and filters them based on
+  /// the prefixes specified in [poiLayerContainIds].
+  Future<List<String>> findPOILayers(List<String> poiLayerContainIds) async {
+    final mapLibreController = _baatoController.controller;
+    if (mapLibreController == null) return [];
+
+    List<String> layers = (await mapLibreController.getLayerIds())
+        .map((e) => e.toString())
+        .toList();
+
+    List<String> poiLayers = layers
+        .where(
+          (layer) => poiLayerContainIds.any(
+            (text) => layer.startsWith(text),
+          ),
+        )
+        .toList();
+
+    _poiLayers = poiLayers;
+    if (poiLayers.isEmpty) {
+      return [];
+    }
+
+    return poiLayers;
+  }
+
+  /// Queries the map for features at the given screen point.
+  ///
+  /// Returns a list of [BaatoMapFeature] objects representing the map features
+  /// found at the specified point.
+  Future<List<BaatoMapFeature>> queryPOIFeatures(
+    Point<double> point, {
+    BaatoCoordinate? sourceCoordinate,
+  }) async {
+    final mapLibreController = _baatoController.controller;
+    if (mapLibreController == null) return [];
+
+    List<dynamic> mapFeatures = await mapLibreController.queryRenderedFeatures(
+      point,
+      _poiLayers,
+      null,
+    );
+
+    final features = mapFeatures
+        .map(
+          (e) => BaatoMapFeature.fromMapFeature(e, sourceCoordinate),
+        )
+        .toList();
+
+    return features;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<BaatoMapStyle>(
@@ -309,7 +389,12 @@ class BaatoMap extends StatelessWidget {
           gestureRecognizers: gestureRecognizers,
           annotationOrder: annotationOrder,
           annotationConsumeTapEvents: annotationConsumeTapEvents,
-          onStyleLoadedCallback: onStyleLoadedCallback,
+          onStyleLoadedCallback: () async {
+            onStyleLoadedCallback?.call();
+            await _addDefaultAssets();
+            _poiLayers = await findPOILayers(poiLayerContainIds);
+            _baatoController.setPOILayers(_poiLayers);
+          },
           iosLongClickDuration: iosLongClickDuration,
           compassEnabled: compassEnabled,
           dragEnabled: dragEnabled,

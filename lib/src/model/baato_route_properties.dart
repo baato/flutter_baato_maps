@@ -44,14 +44,19 @@ class BaatoRouteProperties {
   /// Returns a Map<String, dynamic> representing the GeoJSON object.
   Map<String, dynamic> toGeoJson() {
     return {
-      "type": "Feature",
-      "geometry": {
-        "type": "LineString",
-        "coordinates": coordinates
-            .map((coord) => [coord.longitude, coord.latitude])
-            .toList(),
-      },
-      "properties": lineLayerProperties.toJson(),
+      "type": "FeatureCollection",
+      "features": [
+        {
+          "type": "Feature",
+          "geometry": {
+            "type": "LineString",
+            "coordinates": coordinates
+                .map((coord) => [coord.longitude, coord.latitude])
+                .toList(),
+          },
+          "properties": lineLayerProperties.toJson(),
+        }
+      ]
     };
   }
 }

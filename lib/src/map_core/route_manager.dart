@@ -88,11 +88,11 @@ class RouteManager {
   }) async {
     final isSourceExists = await _sourceAndLayerManager.sourceExists(sourceId);
     if (isSourceExists) {
-      _mapLibreMapController.setGeoJsonSource(sourceId, geoJson);
+      await _mapLibreMapController.setGeoJsonSource(sourceId, geoJson);
     } else {
-      _mapLibreMapController.addGeoJsonSource(sourceId, geoJson);
+      await _mapLibreMapController.addGeoJsonSource(sourceId, geoJson);
     }
-    final lineLayerMap = geoJson['properties'];
+    final lineLayerMap = geoJson['features'][0]['properties'];
     final LineLayerProperties lineLayerProperties;
     if (lineLayerMap == null) {
       lineLayerProperties = const LineLayerProperties(

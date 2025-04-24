@@ -13,7 +13,7 @@ class BaatoMapFeature {
   /// The importance rank of the feature.
   ///
   /// Higher values typically indicate more significant features.
-  final int rank;
+  final double rank;
 
   /// The primary classification of the feature (e.g., "building", "highway").
   final String className;
@@ -60,7 +60,7 @@ class BaatoMapFeature {
     );
 
     String? name = attributes?['name'] as String?;
-    int rank = attributes?['rank'] as int? ?? 0;
+    double rank = attributes?['rank'] as double? ?? 0;
     String className = attributes?['class'] as String? ?? '';
     String? subClassName = attributes?['subclass'] as String?;
 

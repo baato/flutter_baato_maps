@@ -91,9 +91,9 @@ class BaatoMapController {
     shapeManager = ShapeManager(_controller!);
     coordinateConverter = CoordinateConverter(_controller!);
     routeManager = RouteManager(_controller!, sourceAndLayerManager);
-    await _addDefaultAssets();
-    _poiLayers =
-        await findPOILayers(poiLayerContainIds ?? const ["Poi", "BusStop"]);
+    // await _addDefaultAssets();
+    // _poiLayers =
+    //     await findPOILayers(poiLayerContainIds ?? const ["Poi", "BusStop"]);
   }
 
   /// Adds a listener to the map controller
@@ -144,6 +144,10 @@ class BaatoMapController {
     }
     final Uint8List imageBytes = data.buffer.asUint8List();
     await _controller!.addImage(name, imageBytes);
+  }
+
+  setPOILayers(List<String> poiLayer) {
+    _poiLayers = poiLayer;
   }
 
   /// Returns the raw MapLibre controller
