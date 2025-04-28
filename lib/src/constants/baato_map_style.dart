@@ -14,6 +14,11 @@ abstract class BaatoMapStyle {
   /// The baato lite style map.
   ///
   /// A light and airy map style with subtle colors and clear typography.
+  static var defaultStyle = _DefaultStyle();
+
+  /// The baato lite style map.
+  ///
+  /// A light and airy map style with subtle colors and clear typography.
   static const baatoLite = _BaatoLiteStyle();
 
   /// The breeze style map.
@@ -116,4 +121,22 @@ class _CustomStyle implements BaatoMapStyle {
 
   @override
   String get styleURL => customStyleURL;
+}
+
+class _DefaultStyle implements BaatoMapStyle {
+  String? styleFromAsset;
+
+  /// The default style map.
+  _DefaultStyle() {
+    loadDefaultStyle();
+  }
+
+  Future<void> loadDefaultStyle() async {
+    // load the default style from the map
+    await Future.delayed(Duration(seconds: 3));
+    styleFromAsset = _BaatoLiteStyle().styleURL;
+  }
+
+  @override
+  String get styleURL => styleFromAsset ?? '';
 }

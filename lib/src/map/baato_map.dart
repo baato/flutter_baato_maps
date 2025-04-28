@@ -69,7 +69,8 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.circle,
       AnnotationType.symbol,
     ],
-  }) : _baatoController = BaatoMapController(style ?? BaatoMapStyle.breeze);
+  }) : _baatoController =
+            BaatoMapController(style ?? BaatoMapStyle.defaultStyle);
 
   /// The initial geographic position of the map's center.
   final BaatoCoordinate initialPosition;
