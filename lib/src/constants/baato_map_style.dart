@@ -1,4 +1,5 @@
 import 'package:baato_maps/src/constants/base_constant.dart';
+import 'package:baato_maps/src/map/default_style.dart';
 import 'package:baato_maps/src/map/map_configuration.dart';
 
 /// Abstract class representing different map styles available in the Baato Maps package.
@@ -10,6 +11,11 @@ abstract class BaatoMapStyle {
   ///
   /// This URL is used to load the map style from the Baato Maps API.
   String get styleURL;
+
+  /// The baato lite style map.
+  ///
+  /// A light and airy map style with subtle colors and clear typography.
+  static var defaultStyle = _DefaultStyle();
 
   /// The baato lite style map.
   ///
@@ -116,4 +122,22 @@ class _CustomStyle implements BaatoMapStyle {
 
   @override
   String get styleURL => customStyleURL;
+}
+
+class _DefaultStyle implements BaatoMapStyle {
+  String? styleFromAsset;
+
+  /// The default style map.
+  _DefaultStyle() {
+    loadDefaultStyle();
+  }
+
+  Future<void> loadDefaultStyle() async {
+    // load the default style from the map
+    // await Future.delayed(Duration(seconds: 3));
+    styleFromAsset = await DefaultStyle().loadStyle();
+  }
+
+  @override
+  String get styleURL => styleFromAsset ?? '';
 }

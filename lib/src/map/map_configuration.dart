@@ -1,3 +1,5 @@
+import 'package:baato_maps/baato_maps.dart';
+
 /// Configuration class for Baato Maps.
 ///
 /// This class manages the configuration settings required for Baato Maps to function,
@@ -81,5 +83,6 @@ class BaatoMapConfig {
       receiveTimeoutInSeconds: receiveTimeoutInSeconds,
       enableLogging: enableLogging,
     );
+    BaatoMapStyle.defaultStyle.loadDefaultStyle();
   }
 }

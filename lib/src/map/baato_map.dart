@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:baato_api/baato_api.dart';
 import 'package:baato_maps/src/constants/baato_map_style.dart';
 import 'package:baato_maps/src/constants/baato_markers.dart';
-import 'package:baato_maps/src/map/default_style.dart';
 import 'package:baato_maps/src/model/baato_map_feature.dart';
 import 'package:baato_maps/src/model/baato_camera_position.dart';
 import 'package:flutter/foundation.dart';
@@ -72,7 +71,8 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.circle,
       AnnotationType.symbol,
     ],
-  }) : _baatoController = BaatoMapController(style ?? BaatoMapStyle.breeze);
+  }) : _baatoController =
+            BaatoMapController(style ?? BaatoMapStyle.defaultStyle);
 
   /// The initial geographic position of the map's center.
   final BaatoCoordinate initialPosition;
@@ -330,102 +330,91 @@ class BaatoMap extends StatelessWidget {
           ),
           zoom: lastCameraPosition?.zoom ?? initialZoom,
         );
-        return FutureBuilder(
-            future: DefaultStyle().loadStyle(),
-            builder: (context, snapShot) {
-              var styleString = style.styleURL;
-              if (snapShot.hasData) {
-                styleString = snapShot.data!;
-              } else {
-                return Container();
-              }
-              return MapLibreMap(
-                key: ValueKey(style.styleURL),
-                initialCameraPosition: cameraPosition,
-                styleString: styleString,
-                myLocationEnabled: myLocationEnabled,
-                onMapCreated: (controller) async {
-                  await _baatoController.setController(controller,
-                      poiLayerContainIds:
-                          enableLayerDetection ? poiLayerContainIds : null);
+        return MapLibreMap(
+          key: ValueKey("baato_maps"),
+          initialCameraPosition: cameraPosition,
+          styleString: style.styleURL,
+          myLocationEnabled: myLocationEnabled,
+          onMapCreated: (controller) async {
+            await _baatoController.setController(controller,
+                poiLayerContainIds:
+                    enableLayerDetection ? poiLayerContainIds : null);
 
-                  onMapCreated?.call(_baatoController);
-                },
-                onMapClick: (point, latLng) async {
-                  final List<BaatoMapFeature> features = enableLayerDetection
-                      ? (await _baatoController.queryPOIFeatures(point))
-                      : [];
-                  onTap?.call(
-                    point,
-                    BaatoCoordinate(
-                      latitude: latLng.latitude,
-                      longitude: latLng.longitude,
-                    ),
-                    features,
-                  );
-                },
-                onMapLongClick: (point, latLng) async {
-                  final List<BaatoMapFeature> features = enableLayerDetection
-                      ? await _baatoController.queryPOIFeatures(point)
-                      : [];
-                  onLongPress?.call(
-                    point,
-                    BaatoCoordinate(
-                      latitude: latLng.latitude,
-                      longitude: latLng.longitude,
-                    ),
-                    features,
-                  );
-                },
-                onUserLocationUpdated: onUserLocationUpdated,
-                onCameraTrackingChanged: onCameraTrackingChanged,
-                onCameraTrackingDismissed: onCameraTrackingDismissed,
-                onCameraIdle: () {
-                  final position =
-                      _baatoController.rawController?.cameraPosition;
-                  if (position != null) {
-                    _baatoController.cameraManager?.setLastCameraPosition(
-                      BaatoCameraPosition(
-                        target: BaatoCoordinate(
-                          latitude: position.target.latitude,
-                          longitude: position.target.longitude,
-                        ),
-                      ),
-                    );
-                  }
-                  // _baatoController.rawController?.invalidateAmbientCache();
-                  onCameraIdle?.call();
-                },
-                onMapIdle: onMapIdle,
-                gestureRecognizers: gestureRecognizers,
-                annotationOrder: annotationOrder,
-                annotationConsumeTapEvents: annotationConsumeTapEvents,
-                onStyleLoadedCallback: () async {
-                  onStyleLoadedCallback?.call();
-                  await _addDefaultAssets();
-                  _poiLayers = await findPOILayers(poiLayerContainIds);
-                  _baatoController.setPOILayers(_poiLayers);
-                },
-                iosLongClickDuration: iosLongClickDuration,
-                compassEnabled: compassEnabled,
-                dragEnabled: dragEnabled,
-                cameraTargetBounds: cameraTargetBounds,
-                minMaxZoomPreference: minMaxZoomPreference,
-                rotateGesturesEnabled: rotateGesturesEnabled,
-                scrollGesturesEnabled: scrollGesturesEnabled,
-                zoomGesturesEnabled: zoomGesturesEnabled,
-                tiltGesturesEnabled: tiltGesturesEnabled,
-                doubleClickZoomEnabled: doubleClickZoomEnabled,
-                trackCameraPosition: trackCameraPosition,
-                myLocationTrackingMode: myLocationTrackingMode,
-                myLocationRenderMode: myLocationRenderMode,
-                logoViewMargins: logoViewMargins,
-                compassViewPosition: compassViewPosition,
-                compassViewMargins: compassViewMargins,
-                attributionButtonPosition: attributionButtonPosition,
-                attributionButtonMargins: attributionButtonMargins,
+            onMapCreated?.call(_baatoController);
+          },
+          onMapClick: (point, latLng) async {
+            final List<BaatoMapFeature> features = enableLayerDetection
+                ? (await _baatoController.queryPOIFeatures(point))
+                : [];
+            onTap?.call(
+              point,
+              BaatoCoordinate(
+                latitude: latLng.latitude,
+                longitude: latLng.longitude,
+              ),
+              features,
+            );
+          },
+          onMapLongClick: (point, latLng) async {
+            final List<BaatoMapFeature> features = enableLayerDetection
+                ? await _baatoController.queryPOIFeatures(point)
+                : [];
+            onLongPress?.call(
+              point,
+              BaatoCoordinate(
+                latitude: latLng.latitude,
+                longitude: latLng.longitude,
+              ),
+              features,
+            );
+          },
+          onUserLocationUpdated: onUserLocationUpdated,
+          onCameraTrackingChanged: onCameraTrackingChanged,
+          onCameraTrackingDismissed: onCameraTrackingDismissed,
+          onCameraIdle: () {
+            final position = _baatoController.rawController?.cameraPosition;
+            if (position != null) {
+              _baatoController.cameraManager?.setLastCameraPosition(
+                BaatoCameraPosition(
+                  target: BaatoCoordinate(
+                    latitude: position.target.latitude,
+                    longitude: position.target.longitude,
+                  ),
+                ),
               );
-            });
+            }
+            // _baatoController.rawController?.invalidateAmbientCache();
+            onCameraIdle?.call();
+          },
+          onMapIdle: onMapIdle,
+          gestureRecognizers: gestureRecognizers,
+          annotationOrder: annotationOrder,
+          annotationConsumeTapEvents: annotationConsumeTapEvents,
+          onStyleLoadedCallback: () async {
+            onStyleLoadedCallback?.call();
+            await _addDefaultAssets();
+            _poiLayers = await findPOILayers(poiLayerContainIds);
+            _baatoController.setPOILayers(_poiLayers);
+          },
+          iosLongClickDuration: iosLongClickDuration,
+          compassEnabled: compassEnabled,
+          dragEnabled: dragEnabled,
+          cameraTargetBounds: cameraTargetBounds,
+          minMaxZoomPreference: minMaxZoomPreference,
+          rotateGesturesEnabled: rotateGesturesEnabled,
+          scrollGesturesEnabled: scrollGesturesEnabled,
+          zoomGesturesEnabled: zoomGesturesEnabled,
+          tiltGesturesEnabled: tiltGesturesEnabled,
+          doubleClickZoomEnabled: doubleClickZoomEnabled,
+          trackCameraPosition: trackCameraPosition,
+          myLocationTrackingMode: myLocationTrackingMode,
+          myLocationRenderMode: myLocationRenderMode,
+          logoViewMargins: logoViewMargins,
+          compassViewPosition: compassViewPosition,
+          compassViewMargins: compassViewMargins,
+          attributionButtonPosition: attributionButtonPosition,
+          attributionButtonMargins: attributionButtonMargins,
+        );
       },
     );
   }

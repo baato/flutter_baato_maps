@@ -23,7 +23,7 @@ class MapScreen extends StatefulWidget {
 /// Manages the map style and bottom sheet controller, and builds
 /// the UI combining the map view with the appropriate bottom sheet content.
 class _MapScreenState extends State<MapScreen> {
-  final BaatoMapStyle _currentStyle = BaatoMapStyle.baatoLite;
+  final BaatoMapStyle _currentStyle = BaatoMapStyle.defaultStyle;
 
   final BottomSheetController _sheetController = BottomSheetController(
     bottomSheetType: SearchBottomSheet(),
@@ -31,6 +31,33 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          BaatoMapView(
+            initialPosition: BaatoCoordinate(
+              latitude: 27.7172,
+              longitude: 85.3240,
+            ),
+            style: _currentStyle,
+          ),
+          Positioned(
+              left: 0,
+              right: 0,
+              bottom: 0,
+              child: Container(
+                color: Colors.white,
+                height: 270,
+                child: SearchBottomSheetWidget(
+                  controller: _sheetController,
+                  onSearch: (query) {},
+                  onSuggestionSelected: (suggestion) {},
+                  getSuggestions: (query) => [],
+                ),
+              ))
+        ],
+      ),
+    );
     return Scaffold(
         body: FlutterBottomSheet(
       body: BaatoMapView(

@@ -3511,7 +3511,7 @@ class DefaultStyle {
         }
       ],
       "glyphs":
-          "file://$cacheDirPath/packages/baato_maps/lib/assets/map_res/glyphs/{fontstack}/{range}.pbf.gz",
+          "https://baatocdn.sgp1.cdn.digitaloceanspaces.com/fonts_lite/{fontstack}/{range}.pbf.gz",
       "id": "basic",
       "version": 8
     }''';

@@ -22,6 +22,5 @@ dev_dependencies:
 flutter:
   assets:
     - lib/assets/markers/
-    - lib/assets/map_res/glyphs/OpenSans/
     - lib/assets/map_res/sprites/
     - lib/assets/map_res/mapstyle.json
