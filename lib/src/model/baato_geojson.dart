@@ -17,7 +17,9 @@ abstract class BaatoGeoJson {
   /// Converts this feature to a GeoJSON-compliant map.
   ///
   /// Returns a map that follows the GeoJSON specification.
-  Map<String, dynamic> toGeoJson();
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  });
 }
 
 /// A GeoJSON Point feature.
@@ -42,8 +44,10 @@ class BaatoPointGeoJson extends BaatoGeoJson {
   });
 
   @override
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       'type': 'Feature',
       'geometry': {
         'type': 'Point',
@@ -51,6 +55,15 @@ class BaatoPointGeoJson extends BaatoGeoJson {
       },
       'properties': properties != null ? properties?.toJson() : {},
     };
+
+    if (wrappedWithFeatureCollection) {
+      return {
+        'type': 'FeatureCollection',
+        'features': [featureJson]
+      };
+    }
+
+    return featureJson;
   }
 }
 
@@ -68,8 +81,10 @@ class BaatoMultiPointGeoJson extends BaatoGeoJson {
   BaatoMultiPointGeoJson({required this.points, super.properties});
 
   @override
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       'type': 'Feature',
       'geometry': {
         'type': 'MultiPoint',
@@ -78,6 +93,15 @@ class BaatoMultiPointGeoJson extends BaatoGeoJson {
       },
       'properties': properties != null ? properties?.toJson() : {},
     };
+
+    if (wrappedWithFeatureCollection) {
+      return {
+        'type': 'FeatureCollection',
+        'features': [featureJson]
+      };
+    }
+
+    return featureJson;
   }
 }
 
@@ -95,8 +119,10 @@ class BaatoLineGeoJson extends BaatoGeoJson {
   BaatoLineGeoJson({required this.points, super.properties});
 
   @override
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       'type': 'Feature',
       'geometry': {
         'type': 'LineString',
@@ -105,6 +131,15 @@ class BaatoLineGeoJson extends BaatoGeoJson {
       },
       'properties': properties != null ? properties?.toJson() : {},
     };
+
+    if (wrappedWithFeatureCollection) {
+      return {
+        'type': 'FeatureCollection',
+        'features': [featureJson]
+      };
+    }
+
+    return featureJson;
   }
 }
 
@@ -122,8 +157,10 @@ class BaatoMultiLineGeoJson extends BaatoGeoJson {
   BaatoMultiLineGeoJson({required this.lines, super.properties});
 
   @override
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       'type': 'Feature',
       'geometry': {
         'type': 'MultiLineString',
@@ -134,6 +171,15 @@ class BaatoMultiLineGeoJson extends BaatoGeoJson {
       },
       'properties': properties != null ? properties?.toJson() : {},
     };
+
+    if (wrappedWithFeatureCollection) {
+      return {
+        'type': 'FeatureCollection',
+        'features': [featureJson]
+      };
+    }
+
+    return featureJson;
   }
 }
 
@@ -151,8 +197,10 @@ class BaatoPolygonGeoJson extends BaatoGeoJson {
   BaatoPolygonGeoJson({required this.coordinates, super.properties});
 
   @override
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       'type': 'Feature',
       'geometry': {
         'type': 'Polygon',
@@ -164,6 +212,15 @@ class BaatoPolygonGeoJson extends BaatoGeoJson {
       },
       'properties': properties != null ? properties?.toJson() : {},
     };
+
+    if (wrappedWithFeatureCollection) {
+      return {
+        'type': 'FeatureCollection',
+        'features': [featureJson]
+      };
+    }
+
+    return featureJson;
   }
 }
 
@@ -184,8 +241,10 @@ class BaatoMultiPolygonGeoJson extends BaatoGeoJson {
   });
 
   @override
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       'type': 'Feature',
       'geometry': {
         'type': 'MultiPolygon',
@@ -199,6 +258,15 @@ class BaatoMultiPolygonGeoJson extends BaatoGeoJson {
       },
       'properties': properties != null ? properties?.toJson() : {},
     };
+
+    if (wrappedWithFeatureCollection) {
+      return {
+        'type': 'FeatureCollection',
+        'features': [featureJson]
+      };
+    }
+
+    return featureJson;
   }
 }
 
@@ -216,10 +284,14 @@ class BaatoFeatureCollectionGeoJson {
     required this.features,
   });
 
-  Map<String, dynamic> toGeoJson() {
-    return {
+  Map<String, dynamic> toGeoJson({
+    bool wrappedWithFeatureCollection = false,
+  }) {
+    final featureJson = {
       'type': 'FeatureCollection',
       'features': features.map((feature) => feature.toGeoJson()).toList()
     };
+
+    return featureJson;
   }
 }

@@ -25,12 +25,12 @@ class GeoJsonManager {
     if (!isSourceExist) {
       await _mapLibreMapController.addGeoJsonSource(
         sourceId,
-        geojson.toGeoJson(),
+        geojson.toGeoJson(wrappedWithFeatureCollection: true),
       );
     } else if (updateIfSourceExist) {
       await _mapLibreMapController.setGeoJsonSource(
         sourceId,
-        geojson.toGeoJson(),
+        geojson.toGeoJson(wrappedWithFeatureCollection: true),
       );
     }
 
