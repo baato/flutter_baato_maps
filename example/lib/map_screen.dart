@@ -23,7 +23,7 @@ class MapScreen extends StatefulWidget {
 /// Manages the map style and bottom sheet controller, and builds
 /// the UI combining the map view with the appropriate bottom sheet content.
 class _MapScreenState extends State<MapScreen> {
-  final BaatoMapStyle _currentStyle = BaatoMapStyle.breeze;
+  final BaatoMapStyle _currentStyle = BaatoMapStyle.baatoLite;
 
   final BottomSheetController _sheetController = BottomSheetController(
     bottomSheetType: SearchBottomSheet(),

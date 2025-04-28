@@ -1,5 +1,7 @@
 import 'package:baato_api/baato_api.dart';
 import 'package:baato_maps/src/map/map_configuration.dart';
+import 'package:baato_maps/src/services/glyphs_service.dart';
+import 'package:baato_maps/src/services/sprite_service.dart';
 
 /// The main entry point for the Baato package.
 ///
@@ -48,14 +50,16 @@ class Baato {
   /// - [connectTimeoutInSeconds]: Timeout for establishing API connections (default: 10)
   /// - [receiveTimeoutInSeconds]: Timeout for receiving API responses (default: 10)
   /// - [enableLogging]: Whether to enable debug logging (default: false)
-  static void configure({
+  static Future<void> configure({
     required String apiKey,
     String? appId,
     String? securityCode,
     int connectTimeoutInSeconds = 10,
     int receiveTimeoutInSeconds = 10,
     bool enableLogging = false,
-  }) {
+  }) async {
+    await GlyphsService().copyGlyphsToCacheDir();
+    await SpriteService().copyspritesToCacheDir();
     // Configure the BaatoMapConfig
     BaatoMapConfig.configure(
       apiKey: apiKey,
