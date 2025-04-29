@@ -23,4 +23,3 @@ flutter:
   assets:
     - lib/assets/markers/
     - lib/assets/map_res/sprites/
-    - lib/assets/map_res/mapstyle.json
