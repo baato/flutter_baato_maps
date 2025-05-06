@@ -40,7 +40,7 @@ void main() {
   // Initialize Baato Maps with your API key
   Baato.configure(
     apiKey: 'YOUR_BAATO_API_KEY',
-    enableLogging: true, // Optional: Enable logging for debugging
+    enableLogging: true, // [Optional]: Enable logging for debugging
   );
 
   runApp(MyApp());
@@ -61,6 +61,10 @@ BaatoMap(
   myLocationEnabled: true,
   onMapCreated: (BaatoMapController controller) {
     // Store controller for later use
+  },
+  onTap: (point, coordinate, feature) {
+   // Perform adding marker, reverse geocoding,
+   // and other callbacks   
   },
 )
 ```
@@ -113,6 +117,48 @@ mapController.shapeManager.addCircle(
 );
 ```
 
+### Camera Managemant
+
+##### Move to My location
+
+```dart
+mapController.cameraManager.moveToMyLocation();
+```
+
+##### Move to location
+
+```dart
+mapController.cameraManager
+            .moveTo(coordinate,//[Required] geographic coordinates of location
+            zoom: //[Optional] Zoom the map on that location
+            animate: //[default true]
+            );
+```
+
+##### Get Current Camera Position
+Returns a CameraPosition containing the current camera coordinates and zoom level.
+If the camera position is not available, returns default values (0,0) with zoom 0.
+
+```dart
+BaatoCameraPosition cameraPosition= mapController.cameraManager.getCameraPosition();
+```
+
+##### Zoom In
+Increases the map zoom level by 1.
+Animates the camera to zoom in and updates the last camera position.
+
+```dart
+mapController.cameraManager.zoomIn();
+```
+
+##### Zoom Out
+Decreases the map zoom level by 1.
+Animates the camera to zoom out and updates the last camera position.
+
+```dart
+mapController.cameraManager.zoomOut();
+```
+
 ## Available Map Styles
 
 Baato Maps provides several built-in map styles that can be accessed through the `BaatoMapStyle` class:
@@ -155,6 +201,50 @@ mapController.sourceAndLayerManager.addLayer(
   "custom-layer",
   // Layer properties
 );
+```
+## Baato API's
+
+### Place Search
+Searches for places based on a query string
+```dart
+ BaatoSearchPlaceResponse response = await Baato.api.
+  place.search(query, //[Required] search query text
+  limit: //[Optional] Maximum number of results to return
+  type: // [Optional] Filter for place types
+  radius: // [Optional] Search radius in meters
+  currentCoordinate: // [Optional] Current location coordinates
+  );
+```
+
+### Reverse GeoCoding
+Performs reverse geocoding to find places near specified coordinates
+```dart
+BaatoPlaceResponse response = await Baato.api.
+    place.reverseGeocode(baatoCoordinate,//[Required] geographic coordinates to search around
+    limit: //[Optional] maximum number of results to return
+    radius: //[Optional] search radius in meters 
+    );
+```
+
+### Get and Draw Routes
+Get routes between start and destination point
+
+```dart
+    BaatoRouteResponse route = await Baato.api.
+      direction.getRoutes(
+        startCoordinate: //[Required] Start Position Coordinate
+        endCoordinate: // [Required] End Position Coordinate,
+        mode: BaatoDirectionMode.foot, // [Optional] [car,bike,foot]
+        decodePolyline: // [Optional] 
+        alternatives:  //[Optional] Provides alternative routes to reach destination
+        instructions: // [Optional] Provides Instructions to reach destination
+        );
+
+//Draw Route on the map
+    mapController.routeManager.drawRouteFromResponse(
+      route,
+      lineLayerProperties: BaatoLineLayerProperties() //Customize line property
+    );
 ```
 
 ## Contributing
