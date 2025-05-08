@@ -127,12 +127,12 @@ class BaatoMapController {
   /// Adds default assets to the map
   ///
   /// This includes the default Baato marker icon
-  Future<void> _addDefaultAssets() async {
-    final ByteData bytes = await rootBundle.load(
-      BaatoMarker.baatoDefault.assetPath,
-    );
-    await addImageFromData("baato_marker", bytes);
-  }
+  // Future<void> _addDefaultAssets() async {
+  //   final ByteData bytes = await rootBundle.load(
+  //     BaatoMarker.baatoDefault.assetPath,
+  //   );
+  //   await addImageFromData("baato_marker", bytes);
+  // }
 
   /// Adds an image to the map from binary data
   ///
