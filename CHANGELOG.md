@@ -16,3 +16,7 @@
 ## 1.0.1
 
 - Baato lite map style added by default
+
+## 1.0.2
+
+- Default style for iOS setup
