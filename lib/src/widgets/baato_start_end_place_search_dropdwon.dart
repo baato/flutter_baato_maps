@@ -430,7 +430,9 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
 
   void _showMidpointOverlay(int index) {
     if (_midpointOverlayEntries[index] != null ||
-        !_showMidpointSuggestions[index]) return;
+        !_showMidpointSuggestions[index]) {
+      return;
+    }
 
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;
