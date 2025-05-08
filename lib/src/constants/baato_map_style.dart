@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:baato_maps/src/constants/base_constant.dart';
 import 'package:baato_maps/src/map/default_style.dart';
 import 'package:baato_maps/src/map/map_configuration.dart';
@@ -129,7 +131,11 @@ class _DefaultStyle implements BaatoMapStyle {
 
   /// The default style map.
   _DefaultStyle() {
-    loadDefaultStyle();
+    if (Platform.isIOS) {
+      styleFromAsset = BaatoMapStyle.baatoLite.styleURL;
+    } else if (Platform.isAndroid) {
+      loadDefaultStyle();
+    }
   }
 
   Future<void> loadDefaultStyle() async {

@@ -4,10 +4,14 @@ PODS:
   - maplibre_gl (0.0.1):
     - Flutter
     - MapLibre (= 6.5.0)
+  - path_provider_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - maplibre_gl (from `.symlinks/plugins/maplibre_gl/ios`)
+  - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
 
 SPEC REPOS:
   trunk:
@@ -18,11 +22,14 @@ EXTERNAL SOURCES:
     :path: Flutter
   maplibre_gl:
     :path: ".symlinks/plugins/maplibre_gl/ios"
+  path_provider_foundation:
+    :path: ".symlinks/plugins/path_provider_foundation/darwin"
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   MapLibre: 0ebfa9329d313cec8bf0a5ba5a336a1dc903785e
-  maplibre_gl: 943a491fffb3337c1b9de57fd377206d18c16e34
+  maplibre_gl: be7b98f1c3ed75bf77f321eec04df359d0ff6f62
+  path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
 
