@@ -16,6 +16,7 @@ import 'package:baato_maps/src/map/baato_map_controller.dart';
 ///
 /// This widget provides a customizable map interface with various interaction capabilities
 /// such as tapping, long-pressing, and location tracking.
+// ignore: must_be_immutable
 class BaatoMap extends StatelessWidget {
   /// Creates a BaatoMap with the specified parameters.
   ///

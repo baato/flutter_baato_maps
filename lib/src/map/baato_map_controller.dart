@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:baato_api/baato_api.dart';
 import 'package:baato_maps/src/constants/baato_map_style.dart';
-import 'package:baato_maps/src/constants/baato_markers.dart';
 import 'package:baato_maps/src/map_core/camera_manager.dart';
 import 'package:baato_maps/src/map_core/coordinate_converter.dart';
 import 'package:baato_maps/src/map_core/geo_json_manager.dart';

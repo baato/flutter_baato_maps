@@ -104,6 +104,7 @@ class BaatoPlaceAutoSuggestion extends StatefulWidget {
   ///
   /// If [onPlaceDetailsRetrieved] is provided, the widget will automatically fetch
   /// detailed information about the selected place and call this callback.
+  // ignore: use_super_parameters
   const BaatoPlaceAutoSuggestion({
     Key? key,
     this.apiKey,

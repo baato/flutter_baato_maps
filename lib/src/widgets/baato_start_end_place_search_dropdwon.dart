@@ -138,6 +138,7 @@ class BaatoStartEndPlaceSearchDropdown<T> extends StatefulWidget {
   /// Creates a BaatoStartEndPlaceSearchDropdown widget.
   ///
   /// The [suggestionsBuilder] and [itemBuilder] parameters are required.
+  // ignore: use_super_parameters
   const BaatoStartEndPlaceSearchDropdown({
     Key? key,
     required this.suggestionsBuilder,
