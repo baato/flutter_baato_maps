@@ -1,11 +1,10 @@
 import 'package:baato_maps/src/model/baato_geojson.dart';
-import 'package:maplibre_gl/maplibre_gl.dart';
 
-class GeoJsonManager {
-  final MapLibreMapController _mapLibreMapController;
-
-  GeoJsonManager(this._mapLibreMapController);
-
+/// A utility interface for managing GeoJSON sources and layers on the map.
+///
+/// This interface defines methods for adding, updating, and removing GeoJSON
+/// data from a map, as well as setting individual features.
+abstract class GeoJsonManager {
   /// Adds a GeoJSON source to the map.
   ///
   /// Parameters:
@@ -19,38 +18,7 @@ class GeoJsonManager {
     required BaatoGeoJson geojson,
     bool updateIfSourceExist = false,
     bool updateIfLayerExist = false,
-  }) async {
-    final isSourceExist =
-        (await _mapLibreMapController.getSourceIds()).contains(sourceId);
-    if (!isSourceExist) {
-      await _mapLibreMapController.addGeoJsonSource(
-        sourceId,
-        geojson.toGeoJson(wrappedWithFeatureCollection: true),
-      );
-    } else if (updateIfSourceExist) {
-      await _mapLibreMapController.setGeoJsonSource(
-        sourceId,
-        geojson.toGeoJson(wrappedWithFeatureCollection: true),
-      );
-    }
-
-    if (geojson.properties != null) {
-      final isLayerExist =
-          (await _mapLibreMapController.getLayerIds()).contains(layerId);
-      if (!isLayerExist) {
-        await _mapLibreMapController.addLayer(
-          sourceId,
-          layerId,
-          geojson.properties!,
-        );
-      } else if (updateIfLayerExist) {
-        await _mapLibreMapController.setLayerProperties(
-          layerId,
-          geojson.properties!,
-        );
-      }
-    }
-  }
+  });
 
   /// Adds a collection of GeoJSON features to the map.
   ///
@@ -60,20 +28,7 @@ class GeoJsonManager {
     String sourceId,
     String layerId,
     BaatoFeatureCollectionGeoJson featureCollection,
-  ) async {
-    for (var i = 0; i < featureCollection.features.length; i++) {
-      final feature = featureCollection.features[i];
-      final sid = i == 0 ? sourceId : "$sourceId$i";
-      final lid = i == 0 ? layerId : "$layerId$i";
-      addGeoJson(
-        sourceId: sid,
-        layerId: lid,
-        geojson: feature,
-        updateIfSourceExist: true,
-        updateIfLayerExist: true,
-      );
-    }
-  }
+  );
 
   /// Updates an existing GeoJSON source and layer with new data.
   ///
@@ -83,31 +38,12 @@ class GeoJsonManager {
     String sourceId,
     String layerId,
     BaatoGeoJson geojson,
-  ) async {
-    return addGeoJson(
-      sourceId: sourceId,
-      layerId: layerId,
-      geojson: geojson,
-      updateIfSourceExist: true,
-      updateIfLayerExist: true,
-    );
-  }
+  );
 
   /// Removes a GeoJSON source and layer from the map.
   ///
   /// Checks if the source and layer exist before attempting to remove them.
-  Future<void> removeGeoJson(String sourceId, String layerId) async {
-    final isSourceExist =
-        (await _mapLibreMapController.getSourceIds()).contains(sourceId);
-    if (isSourceExist) {
-      return _mapLibreMapController.removeSource(sourceId);
-    }
-    final isLayerExist =
-        (await _mapLibreMapController.getLayerIds()).contains(layerId);
-    if (isLayerExist) {
-      return _mapLibreMapController.removeLayer(layerId);
-    }
-  }
+  Future<void> removeGeoJson(String sourceId, String layerId);
 
   /// Sets a specific GeoJSON feature for a given source.
   ///
@@ -115,7 +51,5 @@ class GeoJsonManager {
   Future<void> setGeoJsonFeature(
     String sourceId,
     Map<String, dynamic> geojsonFeature,
-  ) async {
-    return _mapLibreMapController.setGeoJsonFeature(sourceId, geojsonFeature);
-  }
+  );
 }
