@@ -1,9 +1,8 @@
 import 'dart:math';
 
 import 'package:baato_api/baato_api.dart';
-import 'package:baato_maps/src/constants/baato_map_style.dart';
 import 'package:baato_maps/src/constants/baato_markers.dart';
-import 'package:baato_maps/src/model/baato_map_feature.dart';
+import 'package:baato_maps/src/map_core/map_core.dart';
 import 'package:baato_maps/src/model/baato_camera_position.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -16,7 +15,8 @@ import 'package:baato_maps/src/map/baato_map_controller.dart';
 ///
 /// This widget provides a customizable map interface with various interaction capabilities
 /// such as tapping, long-pressing, and location tracking.
-class BaatoMap extends StatelessWidget {
+// ignore: must_be_immutable
+class BaatoMap extends StatefulWidget {
   /// Creates a BaatoMap with the specified parameters.
   ///
   /// The [initialPosition] parameter is required and specifies the initial center point of the map.
@@ -24,17 +24,16 @@ class BaatoMap extends StatelessWidget {
   BaatoMap({
     super.key,
     required this.initialPosition,
+    required this.controller,
     this.initialZoom = 12.0,
-    BaatoMapStyle? style,
     this.myLocationEnabled = false,
     this.poiLayerContainIds = const ["Poi", "BusStop"],
     this.enableLayerDetection = true,
     this.onMapCreated,
-    this.onTap,
-    this.onLongPress,
-    this.gestureRecognizers,
+    this.style,
     this.onMapClick,
     this.onMapLongClick,
+    this.gestureRecognizers,
     this.onUserLocationUpdated,
     this.onCameraTrackingDismissed,
     this.onCameraTrackingChanged,
@@ -71,8 +70,9 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.circle,
       AnnotationType.symbol,
     ],
-  }) : _baatoController =
-            BaatoMapController(style ?? BaatoMapStyle.defaultStyle);
+  }) {
+    controller.changeStyle(style: style);
+  }
 
   /// The initial geographic position of the map's center.
   final BaatoCoordinate initialPosition;
@@ -80,6 +80,8 @@ class BaatoMap extends StatelessWidget {
   /// The initial zoom level of the map.
   /// Higher values zoom in closer to the map.
   final double initialZoom;
+
+  final BaatoMapStyle? style;
 
   /// Whether to show the user's current location on the map.
   final bool myLocationEnabled;
@@ -97,12 +99,12 @@ class BaatoMap extends StatelessWidget {
   /// Callback that is called when the user taps on the map.
   /// Provides the screen point, geographic coordinate, and any detected map features.
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
-      onTap;
+      onMapClick;
 
   /// Callback that is called when the user long-presses on the map.
   /// Provides the screen point, geographic coordinate, and any detected map features.
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
-      onLongPress;
+      onMapLongClick;
 
   /// Which gestures should be consumed by the map.
   ///
@@ -114,14 +116,6 @@ class BaatoMap extends StatelessWidget {
   /// When this set is empty or null, the map will only handle pointer events for gestures that
   /// were not claimed by any other gesture recognizer.
   final Set<Factory<OneSequenceGestureRecognizer>>? gestureRecognizers;
-
-  /// Callback for when the map is clicked.
-  /// This is a direct pass-through to the underlying MapLibre map.
-  final OnMapClickCallback? onMapClick;
-
-  /// Callback for when the map is long-clicked.
-  /// This is a direct pass-through to the underlying MapLibre map.
-  final OnMapClickCallback? onMapLongClick;
 
   /// While the `myLocationEnabled` property is set to `true`, this method is
   /// called whenever a new location update is received by the map view.
@@ -237,8 +231,13 @@ class BaatoMap extends StatelessWidget {
   final Point? attributionButtonMargins;
 
   /// The controller for the Baato map.
-  final BaatoMapController _baatoController;
+  final BaatoMapController controller;
 
+  @override
+  State<BaatoMap> createState() => _BaatoMapState();
+}
+
+class _BaatoMapState extends State<BaatoMap> {
   List<String> _poiLayers = [];
 
   /// Adds default assets to the map
@@ -256,11 +255,11 @@ class BaatoMap extends StatelessWidget {
   /// [name] is the identifier for the image that can be used in marker symbols
   /// [data] is the binary image data
   Future<void> addImageFromData(String name, ByteData data) async {
-    if (_baatoController.controller == null) {
+    if (widget.controller.libreController == null) {
       throw Exception('Baato Map Controller not initialized');
     }
     final Uint8List imageBytes = data.buffer.asUint8List();
-    await _baatoController.controller!.addImage(name, imageBytes);
+    await widget.controller.libreController!.addImage(name, imageBytes);
   }
 
   /// Finds and stores POI layers in the current map style.
@@ -268,7 +267,7 @@ class BaatoMap extends StatelessWidget {
   /// This method queries the map for all layer IDs and filters them based on
   /// the prefixes specified in [poiLayerContainIds].
   Future<List<String>> findPOILayers(List<String> poiLayerContainIds) async {
-    final mapLibreController = _baatoController.controller;
+    final mapLibreController = widget.controller.libreController;
     if (mapLibreController == null) return [];
 
     List<String> layers = (await mapLibreController.getLayerIds())
@@ -299,7 +298,7 @@ class BaatoMap extends StatelessWidget {
     Point<double> point, {
     BaatoCoordinate? sourceCoordinate,
   }) async {
-    final mapLibreController = _baatoController.controller;
+    final mapLibreController = widget.controller.libreController;
     if (mapLibreController == null) return [];
 
     List<dynamic> mapFeatures = await mapLibreController.queryRenderedFeatures(
@@ -317,64 +316,64 @@ class BaatoMap extends StatelessWidget {
     return features;
   }
 
+  late CameraPosition cameraPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    cameraPosition = CameraPosition(
+      target: LatLng(
+        widget.initialPosition.latitude,
+        widget.initialPosition.longitude,
+      ),
+      zoom: widget.initialZoom,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<BaatoMapStyle>(
-      valueListenable: _baatoController.styleManager.styleNotifier,
+      valueListenable: widget.controller.styleManager.styleNotifier,
       builder: (context, style, child) {
-        final lastCameraPosition = null;
-        final cameraPosition = CameraPosition(
-          target: LatLng(
-            lastCameraPosition?.target.latitude ?? initialPosition.latitude,
-            lastCameraPosition?.target.longitude ?? initialPosition.longitude,
-          ),
-          zoom: lastCameraPosition?.zoom ?? initialZoom,
-        );
         return MapLibreMap(
-          key: ValueKey("baato_maps"),
+          key: ValueKey("Baato Maps"),
           initialCameraPosition: cameraPosition,
           styleString: style.styleURL,
-          myLocationEnabled: myLocationEnabled,
-          onMapCreated: (controller) async {
-            await _baatoController.setController(controller,
-                poiLayerContainIds:
-                    enableLayerDetection ? poiLayerContainIds : null);
-
-            onMapCreated?.call(_baatoController);
+          myLocationEnabled: widget.myLocationEnabled,
+          onMapCreated: (libreController) async {
+            await widget.controller.setController(libreController,
+                poiLayerContainIds: widget.enableLayerDetection
+                    ? widget.poiLayerContainIds
+                    : null);
+            widget.onMapCreated?.call(widget.controller);
           },
           onMapClick: (point, latLng) async {
-            final List<BaatoMapFeature> features = enableLayerDetection
-                ? (await _baatoController.queryPOIFeatures(point))
+            final List<BaatoMapFeature> features = widget.enableLayerDetection
+                ? (await widget.controller.queryPOIFeatures(point))
                 : [];
-            onTap?.call(
+            widget.onMapClick?.call(
               point,
-              BaatoCoordinate(
-                latitude: latLng.latitude,
-                longitude: latLng.longitude,
-              ),
+              latLng.toBaatoCoordinate,
               features,
             );
           },
           onMapLongClick: (point, latLng) async {
-            final List<BaatoMapFeature> features = enableLayerDetection
-                ? await _baatoController.queryPOIFeatures(point)
+            final List<BaatoMapFeature> features = widget.enableLayerDetection
+                ? await widget.controller.queryPOIFeatures(point)
                 : [];
-            onLongPress?.call(
+            widget.onMapLongClick?.call(
               point,
-              BaatoCoordinate(
-                latitude: latLng.latitude,
-                longitude: latLng.longitude,
-              ),
+              latLng.toBaatoCoordinate,
               features,
             );
           },
-          onUserLocationUpdated: onUserLocationUpdated,
-          onCameraTrackingChanged: onCameraTrackingChanged,
-          onCameraTrackingDismissed: onCameraTrackingDismissed,
+          onUserLocationUpdated: widget.onUserLocationUpdated,
+          onCameraTrackingChanged: widget.onCameraTrackingChanged,
+          onCameraTrackingDismissed: widget.onCameraTrackingDismissed,
           onCameraIdle: () {
-            final position = _baatoController.rawController?.cameraPosition;
+            final position = widget.controller.rawController?.cameraPosition;
             if (position != null) {
-              _baatoController.cameraManager?.setLastCameraPosition(
+              widget.controller.cameraManager.setLastCameraPosition(
                 BaatoCameraPosition(
                   target: BaatoCoordinate(
                     latitude: position.target.latitude,
@@ -383,37 +382,48 @@ class BaatoMap extends StatelessWidget {
                 ),
               );
             }
-            // _baatoController.rawController?.invalidateAmbientCache();
-            onCameraIdle?.call();
+            // controller.rawController?.invalidateAmbientCache();
+            widget.onCameraIdle?.call();
           },
-          onMapIdle: onMapIdle,
-          gestureRecognizers: gestureRecognizers,
-          annotationOrder: annotationOrder,
-          annotationConsumeTapEvents: annotationConsumeTapEvents,
+          onMapIdle: widget.onMapIdle,
+          gestureRecognizers: widget.gestureRecognizers,
+          annotationOrder: widget.annotationOrder,
+          annotationConsumeTapEvents: widget.annotationConsumeTapEvents,
           onStyleLoadedCallback: () async {
-            onStyleLoadedCallback?.call();
+            // final position = widget.controller.cameraManager.lastCameraPosition;
+            // if (position!=null) {
+            //   widget.controller.cameraManager.setLastCameraPosition(
+            //     BaatoCameraPosition(
+            //       target: BaatoCoordinate(
+            //         latitude: position.target.latitude,
+            //         longitude: position.target.longitude,
+            //       ),
+            //     ),
+            //   );
+            // }
+            widget.onStyleLoadedCallback?.call();
             await _addDefaultAssets();
-            _poiLayers = await findPOILayers(poiLayerContainIds);
-            _baatoController.setPOILayers(_poiLayers);
+            _poiLayers = await findPOILayers(widget.poiLayerContainIds);
+            widget.controller.setPOILayers(_poiLayers);
           },
-          iosLongClickDuration: iosLongClickDuration,
-          compassEnabled: compassEnabled,
-          dragEnabled: dragEnabled,
-          cameraTargetBounds: cameraTargetBounds,
-          minMaxZoomPreference: minMaxZoomPreference,
-          rotateGesturesEnabled: rotateGesturesEnabled,
-          scrollGesturesEnabled: scrollGesturesEnabled,
-          zoomGesturesEnabled: zoomGesturesEnabled,
-          tiltGesturesEnabled: tiltGesturesEnabled,
-          doubleClickZoomEnabled: doubleClickZoomEnabled,
-          trackCameraPosition: trackCameraPosition,
-          myLocationTrackingMode: myLocationTrackingMode,
-          myLocationRenderMode: myLocationRenderMode,
-          logoViewMargins: logoViewMargins,
-          compassViewPosition: compassViewPosition,
-          compassViewMargins: compassViewMargins,
-          attributionButtonPosition: attributionButtonPosition,
-          attributionButtonMargins: attributionButtonMargins,
+          iosLongClickDuration: widget.iosLongClickDuration,
+          compassEnabled: widget.compassEnabled,
+          dragEnabled: widget.dragEnabled,
+          cameraTargetBounds: widget.cameraTargetBounds,
+          minMaxZoomPreference: widget.minMaxZoomPreference,
+          rotateGesturesEnabled: widget.rotateGesturesEnabled,
+          scrollGesturesEnabled: widget.scrollGesturesEnabled,
+          zoomGesturesEnabled: widget.zoomGesturesEnabled,
+          tiltGesturesEnabled: widget.tiltGesturesEnabled,
+          doubleClickZoomEnabled: widget.doubleClickZoomEnabled,
+          trackCameraPosition: widget.trackCameraPosition,
+          myLocationTrackingMode: widget.myLocationTrackingMode,
+          myLocationRenderMode: widget.myLocationRenderMode,
+          logoViewMargins: widget.logoViewMargins,
+          compassViewPosition: widget.compassViewPosition,
+          compassViewMargins: widget.compassViewMargins,
+          attributionButtonPosition: widget.attributionButtonPosition,
+          attributionButtonMargins: widget.attributionButtonMargins,
         );
       },
     );
