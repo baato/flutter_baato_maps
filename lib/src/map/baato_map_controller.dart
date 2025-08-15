@@ -21,9 +21,6 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 /// consistent behavior across different map controller implementations.
 abstract class BaatoMapController {
 
-  /// Indicates whether the map controller has been fully initialized and is ready for use
-  bool get isInitialized;
-
   factory BaatoMapController._internal() => BaatoMapControllerImpl();
 
   /// Manages camera operations like panning, zooming, and animations
