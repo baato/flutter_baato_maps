@@ -390,17 +390,10 @@ class _BaatoMapState extends State<BaatoMap> {
           annotationOrder: widget.annotationOrder,
           annotationConsumeTapEvents: widget.annotationConsumeTapEvents,
           onStyleLoadedCallback: () async {
-            // final position = widget.controller.cameraManager.lastCameraPosition;
-            // if (position!=null) {
-            //   widget.controller.cameraManager.setLastCameraPosition(
-            //     BaatoCameraPosition(
-            //       target: BaatoCoordinate(
-            //         latitude: position.target.latitude,
-            //         longitude: position.target.longitude,
-            //       ),
-            //     ),
-            //   );
-            // }
+            final position = widget.controller.cameraManager.lastCameraPosition;
+            if (position != null) {
+              widget.controller.cameraManager.setLastCameraPosition(position);
+            }
             widget.onStyleLoadedCallback?.call();
             await _addDefaultAssets();
             _poiLayers = await findPOILayers(widget.poiLayerContainIds);
