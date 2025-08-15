@@ -9,8 +9,6 @@ class BaatoMapControllerImpl implements BaatoMapController {
   /// The underlying MapLibre map controller
   MapLibreMapController? _controller;
 
-  @override
-  bool isInitialized = false;
 
   /// Manages camera operations like panning, zooming, and animations
   @override
@@ -97,7 +95,6 @@ class BaatoMapControllerImpl implements BaatoMapController {
     shapeManager = ShapeManagerImpl(_controller!);
     coordinateConverter = CoordinateConverterImpl(_controller!);
     routeManager = RouteManagerImpl(_controller!, sourceAndLayerManager);
-    isInitialized = true;
     // await _addDefaultAssets();
     // _poiLayers =.
     //     await findPOILayers(poiLayerContainIds ?? const ["Poi", "BusStop"]);
@@ -201,5 +198,6 @@ class BaatoMapControllerImpl implements BaatoMapController {
   @override
   void dispose() {
     styleManager.dispose();
+    _controller?.dispose();
   }
 }
