@@ -65,7 +65,12 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.line,
       AnnotationType.circle,
       AnnotationType.symbol,
-    ], this.onTap, this.onLongPress,
+    ],
+    @Deprecated("Use onMapClick instead. This would be removed in next Update")
+    this.onTap,
+    @Deprecated(
+        "Use onMapLongClick instead. This would be removed in next Update")
+    this.onLongPress,
   }) {
     controller.changeStyle(style: style);
   }
@@ -99,7 +104,7 @@ class BaatoMap extends StatelessWidget {
 
   /// Callback that is called when the user taps on the map.
   /// Provides the screen point, geographic coordinate, and any detected map features.
-  @Deprecated("Use onMapClick instead. This would be removed in next Update")
+
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
       onTap;
 
@@ -111,8 +116,7 @@ class BaatoMap extends StatelessWidget {
 
   /// Callback that is called when the user long-presses on the map.
   /// Provides the screen point, geographic coordinate, and any detected map features.
-  @Deprecated(
-      "Use onMapLongClick instead. This would be removed in next Update")
+
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
       onLongPress;
 
