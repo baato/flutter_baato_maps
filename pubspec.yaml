@@ -5,7 +5,7 @@ homepage: https://github.com/baato/flutter_baato_maps
 license: MIT
 
 environment:
-  sdk: ">=3.3.0 <4.0.0"
+  sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
   flutter:
