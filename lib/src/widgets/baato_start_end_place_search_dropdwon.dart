@@ -139,7 +139,7 @@ class BaatoStartEndPlaceSearchDropdown<T> extends StatefulWidget {
   ///
   /// The [suggestionsBuilder] and [itemBuilder] parameters are required.
   const BaatoStartEndPlaceSearchDropdown({
-    Key? key,
+    super.key,
     required this.suggestionsBuilder,
     required this.itemBuilder,
     this.debounceDuration = const Duration(milliseconds: 300),
@@ -165,7 +165,7 @@ class BaatoStartEndPlaceSearchDropdown<T> extends StatefulWidget {
     this.noItemsFoundBuilder,
     this.maxMidpoints = 5,
     this.showMidpoints = true,
-  }) : super(key: key);
+  });
 
   @override
   State<BaatoStartEndPlaceSearchDropdown<T>> createState() =>
@@ -430,7 +430,9 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
 
   void _showMidpointOverlay(int index) {
     if (_midpointOverlayEntries[index] != null ||
-        !_showMidpointSuggestions[index]) return;
+        !_showMidpointSuggestions[index]) {
+      return;
+    }
 
     final overlay = Overlay.of(context);
     final renderBox = context.findRenderObject() as RenderBox;

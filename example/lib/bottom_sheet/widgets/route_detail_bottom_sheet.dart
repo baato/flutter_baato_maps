@@ -1,4 +1,5 @@
 import 'package:example/bottom_sheet/bottom_sheet_position.dart';
+import 'package:example/extension/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:baato_maps/baato_maps.dart';
 import 'package:example/bottom_sheet/bottom_sheet_controller.dart';
@@ -17,12 +18,12 @@ class RouteDetailBottomSheetWidget extends StatefulWidget {
   final Function(LatLng, LatLng, String)? onRouteRequest;
 
   const RouteDetailBottomSheetWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.mapController,
     required this.destinationCoordinates,
     this.onRouteRequest,
-  }) : super(key: key);
+  });
 
   @override
   State<RouteDetailBottomSheetWidget> createState() =>
@@ -92,11 +93,11 @@ class _RouteDetailBottomSheetWidgetState
             hintText: 'Search for a place',
             onPlaceSelected: (suggestion) {},
             suggestionsHeader: Container(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.o8,
               child: Text('Suggestions'),
             ),
             suggestionsFooter: Container(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.o8,
               child: Text('Footer'),
             ),
             inputDecoration: InputDecoration(
@@ -131,11 +132,11 @@ class _RouteDetailBottomSheetWidgetState
             hintText: 'Search for a place',
             onPlaceSelected: (suggestion) {},
             suggestionsHeader: Container(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.o8,
               child: Text('Suggestions'),
             ),
             suggestionsFooter: Container(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.o8,
               child: Text('Footer'),
             ),
             inputDecoration: InputDecoration(

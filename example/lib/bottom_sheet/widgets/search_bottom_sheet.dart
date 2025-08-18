@@ -3,6 +3,7 @@ import 'package:example/baato_map_view.dart';
 import 'package:example/bottom_sheet/bottom_sheet_controller.dart';
 import 'package:example/bottom_sheet/bottom_sheet_position.dart';
 import 'package:example/bottom_sheet/widgets/place_detail_bottom_sheet.dart';
+import 'package:example/extension/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:example/bottom_sheet/bottom_sheet_type.dart';
 
@@ -15,12 +16,12 @@ class SearchBottomSheetWidget extends StatefulWidget {
   final List<String> Function(String) getSuggestions;
 
   const SearchBottomSheetWidget({
-    Key? key,
+    super.key,
     required this.onSearch,
     required this.onSuggestionSelected,
     required this.getSuggestions,
     required this.controller,
-  }) : super(key: key);
+  });
 
   @override
   State<SearchBottomSheetWidget> createState() =>
@@ -29,8 +30,8 @@ class SearchBottomSheetWidget extends StatefulWidget {
 
 class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
   final TextEditingController _searchController = TextEditingController();
-  List<String> _suggestions = [];
-  bool _isSearching = false;
+  List<String> suggestions = [];
+  bool isSearching = false;
 
   @override
   void initState() {
@@ -49,39 +50,36 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
     final query = _searchController.text;
     if (query.isNotEmpty) {
       setState(() {
-        _isSearching = true;
-        _suggestions = widget.getSuggestions(query);
+        isSearching = true;
+        suggestions = widget.getSuggestions(query);
       });
     } else {
       setState(() {
-        _isSearching = false;
-        _suggestions = [];
+        isSearching = false;
+        suggestions = [];
       });
     }
   }
 
-  void _handleSearch() {
-    if (_searchController.text.isNotEmpty) {
-      widget.onSearch(_searchController.text);
-      FocusScope.of(context).unfocus();
-    }
-  }
+  // void _handleSearch() {
+  //   if (_searchController.text.isNotEmpty) {
+  //     widget.onSearch(_searchController.text);
+  //     FocusScope.of(context).unfocus();
+  //   }
+  // }
 
-  void _handleSuggestionTap(String suggestion) {
-    _searchController.text = suggestion;
-    widget.onSuggestionSelected(suggestion);
-    setState(() {
-      _suggestions = [];
-      _isSearching = false;
-    });
-    FocusScope.of(context).unfocus();
-  }
+  // void _handleSuggestionTap(String suggestion) {
+  //   _searchController.text = suggestion;
+  //   widget.onSuggestionSelected(suggestion);
+  //   setState(() {
+  //     suggestions = [];
+  //     isSearching = false;
+  //   });
+  //   FocusScope.of(context).unfocus();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final topPadding = MediaQuery.of(context).padding.top;
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -95,11 +93,11 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               longitude: 85.3240,
             ),
             suggestionsHeader: Container(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.o8,
               child: Text('Suggestions'),
             ),
             suggestionsFooter: Container(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.o8,
               child: Text('Footer'),
             ),
             inputDecoration: InputDecoration(
@@ -116,7 +114,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               }
             },
             onPlaceDetailsRetrieved: (place) {
-              BaatoMapView.mapController.cameraManager?.moveTo(
+              BaatoMapView.mapController.cameraManager.moveTo(
                 BaatoCoordinate(
                   latitude: place.centroid.latitude,
                   longitude: place.centroid.longitude,
@@ -167,7 +165,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
             IconButton(
               icon: Icon(Icons.circle),
               onPressed: () {
-                if (BaatoMapView.markers.length < 1) {
+                if (BaatoMapView.markers.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Please add at least one marker'),

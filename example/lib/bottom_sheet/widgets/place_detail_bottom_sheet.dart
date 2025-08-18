@@ -1,7 +1,5 @@
 import 'package:baato_maps/baato_maps.dart';
-import 'package:example/baato_map_view.dart';
 import 'package:example/bottom_sheet/bottom_sheet_controller.dart';
-import 'package:example/bottom_sheet/bottom_sheet_position.dart';
 import 'package:example/bottom_sheet/bottom_sheet_type.dart';
 import 'package:example/bottom_sheet/widgets/route_detail_bottom_sheet.dart';
 import 'package:flutter/material.dart';
@@ -27,13 +25,13 @@ class PlaceDetailBottomSheetWidget extends StatelessWidget {
   final LatLng coordinates;
 
   const PlaceDetailBottomSheetWidget({
-    Key? key,
+    super.key,
     required this.controller,
     required this.title,
     required this.address,
     required this.distance,
     required this.coordinates,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

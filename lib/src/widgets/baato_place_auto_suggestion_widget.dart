@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:baato_api/baato_api.dart';
 import 'package:baato_maps/src/baato.dart';
+import 'package:baato_maps/src/extension/color.dart';
 import 'package:baato_maps/src/widgets/baato_place_search_dropdown.dart';
 import 'package:flutter/material.dart';
 
@@ -105,7 +106,7 @@ class BaatoPlaceAutoSuggestion extends StatefulWidget {
   /// If [onPlaceDetailsRetrieved] is provided, the widget will automatically fetch
   /// detailed information about the selected place and call this callback.
   const BaatoPlaceAutoSuggestion({
-    Key? key,
+    super.key,
     this.apiKey,
     required this.onPlaceSelected,
     this.onPlaceDetailsRetrieved,
@@ -137,7 +138,7 @@ class BaatoPlaceAutoSuggestion extends StatefulWidget {
     this.stickyHeader = false,
     this.stickyFooter = false,
     this.initialSelection,
-  }) : super(key: key);
+  });
 
   @override
   State<BaatoPlaceAutoSuggestion> createState() =>
@@ -314,7 +315,7 @@ class _BaatoPlaceAutoSuggestionState extends State<BaatoPlaceAutoSuggestion> {
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.o1,
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

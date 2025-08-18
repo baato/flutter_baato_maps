@@ -14,7 +14,7 @@ class FlutterBottomSheet extends StatefulWidget {
   final BottomSheetController? controller;
 
   const FlutterBottomSheet({
-    Key? key,
+    super.key,
     required this.body,
     required this.builder,
     this.header,
@@ -23,7 +23,7 @@ class FlutterBottomSheet extends StatefulWidget {
     this.cornerRadius = 16.0,
     this.color,
     this.controller,
-  }) : super(key: key);
+  });
 
   @override
   State<FlutterBottomSheet> createState() => _FlutterBottomSheetState();
@@ -80,8 +80,8 @@ class _FlutterBottomSheetState extends State<FlutterBottomSheet>
 
   void _updatePositionFromBottomSheetPosition(BottomSheetPosition position) {
     double screenHeight = MediaQuery.of(context).size.height;
-    double adjustedHeight =
-        screenHeight - MediaQuery.of(context).viewInsets.bottom;
+    // double adjustedHeight =
+    //     screenHeight - MediaQuery.of(context).viewInsets.bottom;
 
     if (position == BottomSheetPosition.hidden) {
       _currentPosition = screenHeight;
@@ -96,8 +96,6 @@ class _FlutterBottomSheetState extends State<FlutterBottomSheet>
     } else if (position is FromTheBottomPosition) {
       _currentPosition = screenHeight - position.value;
     }
-
-    print(_currentPosition);
   }
 
   void _onPositionChanged() {
