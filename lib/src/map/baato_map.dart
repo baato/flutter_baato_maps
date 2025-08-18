@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:baato_api/baato_api.dart';
 import 'package:baato_maps/src/constants/baato_markers.dart';
 import 'package:baato_maps/src/map_core/map_core.dart';
@@ -66,7 +65,7 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.line,
       AnnotationType.circle,
       AnnotationType.symbol,
-    ],
+    ], this.onTap, this.onLongPress,
   }) {
     controller.changeStyle(style: style);
   }
@@ -98,10 +97,24 @@ class BaatoMap extends StatelessWidget {
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
       onMapClick;
 
+  /// Callback that is called when the user taps on the map.
+  /// Provides the screen point, geographic coordinate, and any detected map features.
+  @Deprecated("Use onMapClick instead. This would be removed in next Update")
+  final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
+      onTap;
+
   /// Callback that is called when the user long-presses on the map.
   /// Provides the screen point, geographic coordinate, and any detected map features.
+
   final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
       onMapLongClick;
+
+  /// Callback that is called when the user long-presses on the map.
+  /// Provides the screen point, geographic coordinate, and any detected map features.
+  @Deprecated(
+      "Use onMapLongClick instead. This would be removed in next Update")
+  final void Function(Point<double>, BaatoCoordinate, List<BaatoMapFeature>)?
+      onLongPress;
 
   /// Which gestures should be consumed by the map.
   ///
@@ -330,12 +343,20 @@ class BaatoMap extends StatelessWidget {
                 latLng.toBaatoCoordinate,
                 features,
               );
+              // ignore: deprecated_member_use_from_same_package
+              onTap?.call(point, latLng.toBaatoCoordinate, features);
             },
             onMapLongClick: (point, latLng) async {
               final List<BaatoMapFeature> features = enableLayerDetection
                   ? await controller.queryPOIFeatures(point)
                   : [];
               onMapLongClick?.call(
+                point,
+                latLng.toBaatoCoordinate,
+                features,
+              );
+              // ignore: deprecated_member_use_from_same_package
+              onLongPress?.call(
                 point,
                 latLng.toBaatoCoordinate,
                 features,
