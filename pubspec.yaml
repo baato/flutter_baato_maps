@@ -5,19 +5,23 @@ homepage: https://github.com/baato/flutter_baato_maps
 license: MIT
 
 environment:
-  sdk: ">=3.6.0 <4.0.0"
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  maplibre_gl: ^0.22.0
-  baato_api: ^2.0.1
-  path_provider: ^2.1.5
+  maplibre_gl: ^0.20.0
+  # baato_api: ^2.0.1
+  baato_api:
+      git: 
+        url: https://github.com/baato/baato-flutter.git
+        ref: lower_sdk_support
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^4.0.0
 flutter:
   assets:
     - lib/assets/markers/

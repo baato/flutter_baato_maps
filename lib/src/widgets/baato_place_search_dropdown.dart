@@ -442,7 +442,7 @@ class _BaatoPlaceSearchDropdownState<T>
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics:
-            NeverScrollableScrollPhysics(), // Disable scrolling as parent handles it
+            const NeverScrollableScrollPhysics(), // Disable scrolling as parent handles it
         itemCount: _suggestions.length,
         itemBuilder: (context, index) {
           final suggestion = _suggestions[index];

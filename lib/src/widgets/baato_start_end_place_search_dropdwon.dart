@@ -487,7 +487,7 @@ class _BaatoStartEndPlaceSearchDropdownState<T>
         elevation: 4.0,
         child: Container(
           width: width,
-          constraints: BoxConstraints(
+          constraints: const BoxConstraints(
             maxHeight: 300, // Set a reasonable max height for the overlay
           ),
           decoration: widget.suggestionsBoxDecoration ??

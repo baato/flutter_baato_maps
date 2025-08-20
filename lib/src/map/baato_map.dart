@@ -328,7 +328,7 @@ class BaatoMap extends StatelessWidget {
           floatingActionButton: BaatoLogo(style: style),
           floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
           body: MapLibreMap(
-            key: ValueKey("Baato Maps"),
+            key: const ValueKey("Baato Maps"),
             initialCameraPosition: cameraPosition,
             styleString: style.styleURL,
             myLocationEnabled: myLocationEnabled,
