@@ -20,3 +20,9 @@
 ## 1.0.2
 
 - Default style for iOS setup
+
+
+## 1.0.3
+
+- Controller can now be passed externally and initialized using `BaatoMapController()`
+- Fixed issues with `onTap` and `onLongPress` handlers not triggering consistently
