@@ -1,4 +1,4 @@
-class BaatoConstant {
+abstract final class BaatoConstant {
   static const String baseMapStyleUrl = 'https://api.baato.io/api/v1/styles/';
 
   /// The default route source name

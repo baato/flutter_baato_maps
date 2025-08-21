@@ -53,7 +53,8 @@ abstract class BaatoMapStyle {
   ///
   /// [styleURL] is the URL of the custom map style to be used.
   /// Returns a [_CustomStyle] instance with the specified style URL.
-  static customStyle(String styleURL) => _CustomStyle(styleURL);
+  // ignore: library_private_types_in_public_api
+  static _CustomStyle customStyle(String styleURL) => _CustomStyle(styleURL);
 }
 
 /// Implementation of the baato lite style map.

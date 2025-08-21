@@ -6,16 +6,16 @@ class BaatoMapView extends StatelessWidget {
   final double initialZoom;
   final BaatoMapStyle? style;
   final bool myLocationEnabled;
-  static late BaatoMapController mapController;
+  static BaatoMapController mapController = BaatoMapController();
   static List<BaatoCoordinate> markers = [];
 
-  BaatoMapView({
-    Key? key,
+  const BaatoMapView({
+    super.key,
     required this.initialPosition,
     this.initialZoom = 12.0,
     this.style,
     this.myLocationEnabled = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +28,7 @@ class BaatoMapView extends StatelessWidget {
       children: [
         BaatoMap(
           key: ValueKey("baato_map"),
+          controller: mapController,
           initialPosition: BaatoCoordinate(
             latitude: initialPosition.latitude,
             longitude: initialPosition.longitude,
@@ -38,7 +39,7 @@ class BaatoMapView extends StatelessWidget {
           onMapCreated: (controller) {
             BaatoMapView.mapController = controller;
           },
-          onTap: (point, coordinate, features) {
+          onMapClick: (point, coordinate, features) {
             BaatoMapView.markers.add(coordinate);
             if (features.isNotEmpty) {
               final firstFeature = features.first;
@@ -53,7 +54,7 @@ class BaatoMapView extends StatelessWidget {
               );
             }
           },
-          onLongPress: (point, coordinate, features) {
+          onMapLongClick: (point, coordinate, features) {
             if (features.isNotEmpty) {
               final firstFeature = features.first;
               mapController.markerManager.addMarker(
@@ -74,7 +75,7 @@ class BaatoMapView extends StatelessWidget {
           right: 16.0,
           child: FloatingActionButton(
             onPressed: () {
-              mapController.cameraManager?.moveToMyLocation();
+              mapController.cameraManager.moveToMyLocation();
             },
             backgroundColor: Colors.white,
             child: const Icon(Icons.my_location, color: Colors.blue),

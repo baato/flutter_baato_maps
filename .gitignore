@@ -9,6 +9,9 @@
 .history
 .svn/
 migrate_working_dir/
+test_example/
+*.fvmrc
+*.fvm
 
 # IntelliJ related
 *.iml

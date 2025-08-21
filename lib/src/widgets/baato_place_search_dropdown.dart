@@ -151,7 +151,7 @@ class BaatoPlaceSearchDropdown<T> extends StatefulWidget {
   /// The [suggestionsBuilder] and [itemBuilder] parameters are required.
   // ignore: use_super_parameters
   const BaatoPlaceSearchDropdown({
-    Key? key,
+    super.key,
     required this.suggestionsBuilder,
     required this.itemBuilder,
     this.debounceDuration = const Duration(milliseconds: 300),
@@ -182,7 +182,7 @@ class BaatoPlaceSearchDropdown<T> extends StatefulWidget {
     this.stickyHeader = false,
     this.stickyFooter = false,
     this.onFocusChanged,
-  }) : super(key: key);
+  });
 
   @override
   State<BaatoPlaceSearchDropdown<T>> createState() =>
