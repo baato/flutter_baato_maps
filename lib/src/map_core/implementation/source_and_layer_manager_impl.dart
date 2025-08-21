@@ -4,7 +4,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 
 class SourceAndLayerManagerImpl implements SourceAndLayerManager {
   /// The underlying MapLibre map controller used for source and layer operations
-  final MaplibreMapController _mapLibreMapController;
+  final MapLibreMapController _mapLibreMapController;
 
   /// Creates a new SourceAndLayerManager with the specified MapLibre controller
   ///

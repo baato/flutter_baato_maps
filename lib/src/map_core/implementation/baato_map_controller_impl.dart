@@ -7,7 +7,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 
 class BaatoMapControllerImpl implements BaatoMapController {
   /// The underlying MapLibre map controller
-  MaplibreMapController? _controller;
+  MapLibreMapController? _controller;
 
   /// Manages camera operations like panning, zooming, and animations
   @override
@@ -67,20 +67,20 @@ class BaatoMapControllerImpl implements BaatoMapController {
 
   /// The underlying MapLibre map controller
   @override
-  MaplibreMapController? get libreController => _controller;
+  MapLibreMapController? get libreController => _controller;
 
   /// Returns the raw MapLibre controller
   ///
   /// This provides direct access to the underlying MapLibre functionality
   @override
-  MaplibreMapController? get rawController => _controller;
+  MapLibreMapController? get rawController => _controller;
 
   /// Sets the underlying MapLibre controller and initializes all managers
   ///
   /// This method must be called before using any other functionality of this controller
   @override
   Future<void> setController(
-    MaplibreMapController libreController, {
+    MapLibreMapController libreController, {
     List<String>? poiLayerContainIds,
   }) async {
     _controller = libreController;

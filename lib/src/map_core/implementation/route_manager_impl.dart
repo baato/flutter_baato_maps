@@ -4,7 +4,7 @@ import 'package:baato_maps/src/map_core/map_core.dart';
 
 class RouteManagerImpl implements RouteManager {
   /// The underlying MapLibre map controller used for route operations
-  final MaplibreMapController _mapLibreMapController;
+  final MapLibreMapController _mapLibreMapController;
 
   /// The source and layer manager for handling map sources and layers
   final SourceAndLayerManager _sourceAndLayerManager;

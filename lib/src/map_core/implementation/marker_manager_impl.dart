@@ -5,7 +5,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 
 class MarkerManagerImpl implements MarkerManager {
   /// The underlying MapLibre map controller used for marker operations
-  final MaplibreMapController _mapLibreMapController;
+  final MapLibreMapController _mapLibreMapController;
 
   MarkerManagerImpl(
     this._mapLibreMapController,

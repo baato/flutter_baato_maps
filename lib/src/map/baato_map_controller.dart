@@ -50,10 +50,10 @@ abstract class BaatoMapController {
   void Function(UserLocation)? get onUserLocationUpdated;
 
   /// The underlying MapLibre map controller
-  MaplibreMapController? get libreController;
+  MapLibreMapController? get libreController;
 
   /// Returns the raw MapLibre controller for direct access
-  MaplibreMapController? get rawController;
+  MapLibreMapController? get rawController;
 
   /// Creates a new map controller with style changes
   ///
@@ -67,7 +67,7 @@ abstract class BaatoMapController {
   /// [libreController] is the MapLibre controller to wrap
   /// [poiLayerContainIds] optional list of POI layer identifiers
   Future<void> setController(
-    MaplibreMapController libreController, {
+    MapLibreMapController libreController, {
     List<String>? poiLayerContainIds,
   });
 

@@ -15,7 +15,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 /// align with map features.
 class CoordinateConverterImpl implements CoordinateConverter {
   /// The underlying MapLibre map controller used for coordinate conversions
-  final MaplibreMapController _mapLibreMapController;
+  final MapLibreMapController _mapLibreMapController;
 
   /// Creates a new CoordinateConverter with the specified MapLibre controller
   ///

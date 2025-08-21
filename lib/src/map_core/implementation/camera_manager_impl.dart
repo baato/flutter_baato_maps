@@ -14,7 +14,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 /// and provides access to the current camera state.
 class CameraManagerImpl implements CameraManager {
   /// The underlying MapLibre map controller used for camera operations
-  final MaplibreMapController _mapLibreMapController;
+  final MapLibreMapController _mapLibreMapController;
 
   /// Stores the last camera position after camera movements
   BaatoCameraPosition? _lastCameraPosition;

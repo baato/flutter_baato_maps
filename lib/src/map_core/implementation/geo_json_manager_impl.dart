@@ -3,7 +3,7 @@ import 'package:baato_maps/src/model/baato_geojson.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
 class GeoJsonManagerImpl implements GeoJsonManager {
-  final MaplibreMapController _mapLibreMapController;
+  final MapLibreMapController _mapLibreMapController;
 
   GeoJsonManagerImpl(this._mapLibreMapController);
 
