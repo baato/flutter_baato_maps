@@ -2,10 +2,9 @@ import 'package:baato_maps/src/map_core/map_core.dart';
 import 'package:baato_maps/src/model/baato_model.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
-
-class SourceAndLayerManagerImpl implements SourceAndLayerManager{
+class SourceAndLayerManagerImpl implements SourceAndLayerManager {
   /// The underlying MapLibre map controller used for source and layer operations
-  final MapLibreMapController _mapLibreMapController;
+  final MaplibreMapController _mapLibreMapController;
 
   /// Creates a new SourceAndLayerManager with the specified MapLibre controller
   ///
@@ -14,12 +13,13 @@ class SourceAndLayerManagerImpl implements SourceAndLayerManager{
 
   /// Callbacks that are triggered when a map feature is tapped
   @override
-  List<OnFeatureInteractionCallback> get onFeatureTapped => _mapLibreMapController.onFeatureTapped;
+  List<OnFeatureInteractionCallback> get onFeatureTapped =>
+      _mapLibreMapController.onFeatureTapped;
 
   /// Callbacks that are triggered when a map feature is dragged
   @override
-  List<OnFeatureDragnCallback> get onFeatureDrag => _mapLibreMapController.onFeatureDrag;
-
+  List<OnFeatureDragnCallback> get onFeatureDrag =>
+      _mapLibreMapController.onFeatureDrag;
 
   @override
   Future<void> addSource(
@@ -118,7 +118,6 @@ class SourceAndLayerManagerImpl implements SourceAndLayerManager{
     );
   }
 
-
   @override
   Future<void> addFillLayer(
     String sourceId,
@@ -168,7 +167,6 @@ class SourceAndLayerManagerImpl implements SourceAndLayerManager{
       filter: filter,
     );
   }
-
 
   @override
   Future<void> addImageLayer(

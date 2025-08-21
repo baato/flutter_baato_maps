@@ -13,16 +13,15 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 /// such as placing markers at tap locations, determining what geographic features
 /// are under a user's finger, and implementing custom UI overlays that need to
 /// align with map features.
-class CoordinateConverterImpl implements CoordinateConverter{
+class CoordinateConverterImpl implements CoordinateConverter {
   /// The underlying MapLibre map controller used for coordinate conversions
-  final MapLibreMapController _mapLibreMapController;
+  final MaplibreMapController _mapLibreMapController;
 
   /// Creates a new CoordinateConverter with the specified MapLibre controller
   ///
   /// [_mapLibreMapController] is the MapLibre controller that will be used
   /// for all coordinate conversion operations
   CoordinateConverterImpl(this._mapLibreMapController);
-
 
   @override
   Future<BaatoCoordinate?> toLatLng(Offset screenLocation) async {
@@ -34,7 +33,6 @@ class CoordinateConverterImpl implements CoordinateConverter{
       longitude: point.longitude,
     );
   }
-
 
   @override
   Future<Offset?> toScreenLocation(BaatoCoordinate coordinate) async {

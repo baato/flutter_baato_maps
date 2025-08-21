@@ -2,8 +2,8 @@ import 'package:baato_maps/src/map_core/map_core.dart';
 import 'package:baato_maps/src/model/baato_geojson.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
-class GeoJsonManagerImpl implements GeoJsonManager{
-  final MapLibreMapController _mapLibreMapController;
+class GeoJsonManagerImpl implements GeoJsonManager {
+  final MaplibreMapController _mapLibreMapController;
 
   GeoJsonManagerImpl(this._mapLibreMapController);
 

@@ -2,16 +2,14 @@ import 'package:baato_maps/baato_maps.dart';
 import 'package:baato_maps/src/constants/base_constant.dart';
 import 'package:baato_maps/src/map_core/map_core.dart';
 
-
-class RouteManagerImpl implements RouteManager{
+class RouteManagerImpl implements RouteManager {
   /// The underlying MapLibre map controller used for route operations
-  final MapLibreMapController _mapLibreMapController;
+  final MaplibreMapController _mapLibreMapController;
 
   /// The source and layer manager for handling map sources and layers
   final SourceAndLayerManager _sourceAndLayerManager;
 
   RouteManagerImpl(this._mapLibreMapController, this._sourceAndLayerManager);
-
 
   @override
   Future<void> drawRoute(
@@ -28,7 +26,6 @@ class RouteManagerImpl implements RouteManager{
       layerId: layerId,
     );
   }
-
 
   @override
   Future<void> drawRoutesFromProperties(

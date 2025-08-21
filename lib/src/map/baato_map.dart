@@ -50,8 +50,8 @@ class BaatoMap extends StatelessWidget {
     this.tiltGesturesEnabled = true,
     this.doubleClickZoomEnabled,
     this.trackCameraPosition = false,
-    this.myLocationTrackingMode = MyLocationTrackingMode.none,
-    this.myLocationRenderMode = MyLocationRenderMode.normal,
+    this.myLocationTrackingMode = MyLocationTrackingMode.None,
+    this.myLocationRenderMode = MyLocationRenderMode.NORMAL,
     this.compassViewPosition,
     this.compassViewMargins,
     this.annotationOrder = const [
@@ -209,10 +209,10 @@ class BaatoMap extends StatelessWidget {
   /// This takes presedence over zoomGesturesEnabled. Only supported for web.
   final bool? doubleClickZoomEnabled;
 
-  /// True if you want to be notified of map camera movements by the [MapLibreMapController]. Default is false.
+  /// True if you want to be notified of map camera movements by the [MaplibreMapController]. Default is false.
   ///
-  /// If this is set to true and the user pans/zooms/rotates the map, [MapLibreMapController] (which is a [ChangeNotifier])
-  /// will notify it's listeners and you can then get the new [MapLibreMapController].cameraPosition.
+  /// If this is set to true and the user pans/zooms/rotates the map, [MaplibreMapController] (which is a [ChangeNotifier])
+  /// will notify it's listeners and you can then get the new [MaplibreMapController].cameraPosition.
   final bool trackCameraPosition;
 
   /// The mode used to let the map's camera follow the device's physical location.
@@ -327,7 +327,7 @@ class BaatoMap extends StatelessWidget {
           extendBody: true,
           floatingActionButton: BaatoLogo(style: style),
           floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-          body: MapLibreMap(
+          body: MaplibreMap(
             key: const ValueKey("Baato Maps"),
             initialCameraPosition: cameraPosition,
             styleString: style.styleURL,

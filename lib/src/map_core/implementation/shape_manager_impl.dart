@@ -1,5 +1,3 @@
-
-
 import 'package:baato_maps/baato_maps.dart';
 import 'package:baato_maps/src/map_core/map_core.dart';
 
@@ -7,9 +5,9 @@ import 'package:baato_maps/src/map_core/map_core.dart';
 ///
 /// Provides methods to add, remove, and clear various shapes on the map,
 /// such as lines, circles, and fills (polygons), using the MapLibre map controller.
-class ShapeManagerImpl implements ShapeManager{
+class ShapeManagerImpl implements ShapeManager {
   /// The MapLibre map controller for shape operations.
-  final MapLibreMapController _mapLibreMapController;
+  final MaplibreMapController _mapLibreMapController;
 
   /// Constructs a ShapeManager with the given MapLibre controller.
   ///

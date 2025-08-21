@@ -20,7 +20,6 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 /// - [sourceAndLayerManager]: Handles map sources and layers
 /// consistent behavior across different map controller implementations.
 abstract class BaatoMapController {
-
   factory BaatoMapController._internal() => BaatoMapControllerImpl();
 
   /// Manages camera operations like panning, zooming, and animations
@@ -51,10 +50,10 @@ abstract class BaatoMapController {
   void Function(UserLocation)? get onUserLocationUpdated;
 
   /// The underlying MapLibre map controller
-  MapLibreMapController? get libreController;
+  MaplibreMapController? get libreController;
 
   /// Returns the raw MapLibre controller for direct access
-  MapLibreMapController? get rawController;
+  MaplibreMapController? get rawController;
 
   /// Creates a new map controller with style changes
   ///
@@ -68,7 +67,7 @@ abstract class BaatoMapController {
   /// [libreController] is the MapLibre controller to wrap
   /// [poiLayerContainIds] optional list of POI layer identifiers
   Future<void> setController(
-    MapLibreMapController libreController, {
+    MaplibreMapController libreController, {
     List<String>? poiLayerContainIds,
   });
 
