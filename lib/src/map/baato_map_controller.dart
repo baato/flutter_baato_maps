@@ -5,6 +5,7 @@ import 'package:baato_maps/src/constants/baato_map_style.dart';
 import 'package:baato_maps/src/map_core/camera_manager.dart';
 import 'package:baato_maps/src/map_core/coordinate_converter.dart';
 import 'package:baato_maps/src/map_core/geo_json_manager.dart';
+import 'package:baato_maps/src/map_core/implementation/baato_map_controller_impl.dart';
 import 'package:baato_maps/src/map_core/marker_manager.dart';
 import 'package:baato_maps/src/map_core/route_manager.dart';
 import 'package:baato_maps/src/map_core/shape_manager.dart';
@@ -29,7 +30,6 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 /// - [sourceAndLayerManager]: Handles map sources and layers
 /// consistent behavior across different map controller implementations.
 abstract class BaatoMapController {
-
   factory BaatoMapController._internal() => BaatoMapControllerImpl();
 
   /// Manages camera operations like panning, zooming, and animations
@@ -94,12 +94,7 @@ abstract class BaatoMapController {
   /// Forces a resize of the map when running on web platforms
   ///
   /// This is useful when the map container size changes
-  void forceResizeWebMap() async {
-    if (_controller == null) {
-      throw Exception('Baato Map Controller not initialized');
-    }
-    _controller!.forceResizeWebMap();
-  }
+  void forceResizeWebMap();
 
   /// Adds default assets to the map
   ///
