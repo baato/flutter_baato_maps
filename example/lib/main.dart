@@ -10,7 +10,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 void main() async {
   await dotenv.load();
   await Baato.configure(apiKey: dotenv.get('BAATO_API_KEY'));
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 /// Root widget of the application.
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: MyMapPage());
+    return const MaterialApp(home: MyMapPage());
   }
 }
 
@@ -42,6 +42,6 @@ class MyMapPage extends StatefulWidget {
 class _MyMapPageState extends State<MyMapPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: MapScreen());
+    return const Scaffold(body: MapScreen());
   }
 }

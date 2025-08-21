@@ -27,7 +27,7 @@ class BaatoMapView extends StatelessWidget {
     return Stack(
       children: [
         BaatoMap(
-          key: ValueKey("baato_map"),
+          key: const ValueKey("baato_map"),
           controller: mapController,
           initialPosition: BaatoCoordinate(
             latitude: initialPosition.latitude,

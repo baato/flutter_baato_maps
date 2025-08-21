@@ -94,13 +94,13 @@ class _RouteDetailBottomSheetWidgetState
             onPlaceSelected: (suggestion) {},
             suggestionsHeader: Container(
               color: Colors.white.o8,
-              child: Text('Suggestions'),
+              child: const Text('Suggestions'),
             ),
             suggestionsFooter: Container(
               color: Colors.white.o8,
-              child: Text('Footer'),
+              child: const Text('Footer'),
             ),
-            inputDecoration: InputDecoration(
+            inputDecoration: const InputDecoration(
               border: OutlineInputBorder(),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey),
@@ -133,13 +133,13 @@ class _RouteDetailBottomSheetWidgetState
             onPlaceSelected: (suggestion) {},
             suggestionsHeader: Container(
               color: Colors.white.o8,
-              child: Text('Suggestions'),
+              child: const Text('Suggestions'),
             ),
             suggestionsFooter: Container(
               color: Colors.white.o8,
-              child: Text('Footer'),
+              child: const Text('Footer'),
             ),
-            inputDecoration: InputDecoration(
+            inputDecoration: const InputDecoration(
               border: OutlineInputBorder(),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey),

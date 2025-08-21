@@ -94,13 +94,13 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
             ),
             suggestionsHeader: Container(
               color: Colors.white.o8,
-              child: Text('Suggestions'),
+              child: const Text('Suggestions'),
             ),
             suggestionsFooter: Container(
               color: Colors.white.o8,
-              child: Text('Footer'),
+              child: const Text('Footer'),
             ),
-            inputDecoration: InputDecoration(
+            inputDecoration: const InputDecoration(
               border: OutlineInputBorder(),
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey),
@@ -142,7 +142,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: Icon(Icons.add_location),
+              icon: const Icon(Icons.add_location),
               onPressed: () {
                 if (BaatoMapView.markers.length < 3) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -163,7 +163,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.circle),
+              icon: const Icon(Icons.circle),
               onPressed: () {
                 if (BaatoMapView.markers.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -187,7 +187,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.timeline),
+              icon: const Icon(Icons.timeline),
               onPressed: () {
                 if (BaatoMapView.markers.length < 3) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -222,7 +222,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               },
             ),
             IconButton(
-              icon: Icon(Icons.linear_scale),
+              icon: const Icon(Icons.linear_scale),
               onPressed: () {
                 // Add a line to the map
                 if (BaatoMapView.markers.length < 2) {
@@ -258,7 +258,7 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             IconButton(
-              icon: Icon(Icons.directions_car),
+              icon: const Icon(Icons.directions_car),
               onPressed: () async {
                 if (BaatoMapView.markers.length < 2) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -287,9 +287,9 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
             ),
           ],
         ),
-        Spacer(),
+        const Spacer(),
         IconButton(
-          icon: Icon(Icons.clear),
+          icon: const Icon(Icons.clear),
           color: Colors.red,
           iconSize: 32,
           onPressed: () {
