@@ -10,7 +10,7 @@
 .svn/
 migrate_working_dir/
 test_example/
-*.fvmrc
+.fvmrc/
 *.fvm
 
 # IntelliJ related
