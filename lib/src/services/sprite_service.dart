@@ -2,7 +2,6 @@
 import 'package:flutter/foundation.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' as p;
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -47,16 +46,13 @@ class SpriteService {
     }
   }
 
-  Future<List<String>> _getspriteAssets() {
-    return rootBundle
-        .loadString('AssetManifest.json')
-        .then<List<String>>((String manifestJson) {
-      Map<String, dynamic> manifestMap = jsonDecode(manifestJson);
-      return manifestMap.keys
-          .where((String key) =>
-              key.contains('packages/baato_maps/lib/assets/map_res/sprites'))
-          .toList();
-    });
+  Future<List<String>> _getspriteAssets() async {
+    final assetManifest = await AssetManifest.loadFromAssetBundle(rootBundle);
+    return assetManifest
+        .listAssets()
+        .where((String key) =>
+            key.contains('packages/baato_maps/lib/assets/map_res/sprites'))
+        .toList();
   }
 
   Future<void> _writeAssetToFile(ByteData data, String path) {
