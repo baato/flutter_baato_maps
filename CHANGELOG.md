@@ -2,6 +2,9 @@
 ### **BREAKING**
 - Migrate sprite discovery to `AssetManifest.loadFromAssetBundle`
 
+### **Bug Fixes**
+- Fixed typo in `OnFeatureDragCallback` type name (was incorrectly named `OnFeatureDragnCallback`)
+
 ## 1.0.3
 
 - Controller can now be passed externally and initialized using `BaatoMapController()`

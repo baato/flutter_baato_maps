@@ -10,7 +10,7 @@ abstract class SourceAndLayerManager {
   List<OnFeatureInteractionCallback> get onFeatureTapped;
 
   /// Callbacks that are triggered when a map feature is dragged
-  List<OnFeatureDragnCallback> get onFeatureDrag;
+  List<OnFeatureDragCallback> get onFeatureDrag;
 
   /// Adds a data source to the map.
   ///

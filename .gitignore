@@ -38,3 +38,6 @@ build/
 
 # FVM Version Cache
 .fvm/
+
+# Java version configuration (local development)
+.java-version

@@ -16,6 +16,17 @@ A comprehensive Flutter package for integrating Baato Maps into your application
 - **Layer Management**: Add and manage multiple map layers
 - **Cross-Platform**: Works seamlessly on both iOS and Android
 
+## Requirements
+
+### Android
+- **Java 21**: This package requires Java 21 for Android development due to dependencies on MapLibre GL 0.24.1.
+  - You can download Java 21 from [Oracle](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html) or use [OpenJDK 21](https://openjdk.org/projects/jdk/21/)
+  - If using a Java version manager (like jenv, sdkman, or asdf), make sure to set Java 21 as your active version for this project
+  - Set `JAVA_HOME` environment variable to point to your Java 21 installation
+
+### iOS
+- **iOS 14.0+**: Minimum deployment target is iOS 14.0
+
 ## Installation
 
 1. Add the dependency to your `pubspec.yaml`:

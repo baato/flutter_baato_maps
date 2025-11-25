@@ -18,7 +18,7 @@ class SourceAndLayerManagerImpl implements SourceAndLayerManager{
 
   /// Callbacks that are triggered when a map feature is dragged
   @override
-  List<OnFeatureDragnCallback> get onFeatureDrag => _mapLibreMapController.onFeatureDrag;
+  List<OnFeatureDragCallback> get onFeatureDrag => _mapLibreMapController.onFeatureDrag;
 
 
   @override
