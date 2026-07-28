@@ -11,24 +11,24 @@ class SpriteService {
   Future<void> copyspritesToCacheDir() async {
     var dir = (await getApplicationCacheDirectory()).path;
 
+    final List<String> spritesAssets = await _getspriteAssets();
+
     /* Check if the files are present */
 
-    var directory = Directory(dir);
+    // The copy below writes each asset to `<cacheDir>/<assetKey>`, so those are
+    // the paths checked here. Matching on the resolved paths keeps this correct
+    // whatever the sprite files happen to be named.
+    var allSpritesPresent = spritesAssets.isNotEmpty &&
+        spritesAssets.every((asset) => File(p.join(dir, asset)).existsSync());
 
-    var spriteFilesInDirectory = directory
-        .listSync(recursive: true)
-        .where((file) => p.basename(file.path).startsWith('sprite'))
-        .map((file) => p.basename(file.path));
-
-    if (spriteFilesInDirectory.isNotEmpty) {
-      debugPrint('Sprite files directories are already present');
+    if (allSpritesPresent) {
+      debugPrint('Sprite files are already present');
       // Exits here if sprite files already exist
       return;
     }
 
     /* If not present, copy */
 
-    final List<String> spritesAssets = await _getspriteAssets();
     final int spriteAmount = spritesAssets.length;
     for (var i = 0; i < spriteAmount; i++) {
       final String asset = spritesAssets[i];
