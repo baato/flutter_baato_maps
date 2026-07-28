@@ -67,7 +67,7 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.symbol,
     ],
     this.translucentTextureSurface = true,
-    this.symbolFontNames = const ["OpenSans"],
+    this.symbolFontNames,
     @Deprecated("Use onMapClick instead. This would be removed in next Update")
     this.onTap,
     @Deprecated(
@@ -77,17 +77,15 @@ class BaatoMap extends StatelessWidget {
     controller.changeStyle(style: style);
   }
 
-  /// The font stack used for symbol (marker) labels.
+  /// Overrides the font stack used for symbol (marker) labels.
   ///
-  /// maplibre_gl 0.26.0 stopped honouring the per-symbol `fontNames` and
-  /// hardcoded its annotation layers to `["Open Sans Regular", "Arial Unicode
-  /// MS Regular"]`. Baato's glyph endpoint serves `OpenSans`, so those requests
-  /// 404/403 and — because a symbol carrying a `textField` cannot build without
-  /// its glyphs — the whole symbol fails to draw, icon included.
+  /// Defaults to null, in which case the stack is taken from the active style's
+  /// [BaatoMapStyle.fontNames]. Set this only to override a style's own value.
+  /// When both are null no override is applied at all, and maplibre's default
+  /// font stack is left in place.
   ///
-  /// This stack is re-applied to the symbol annotation layers once the style
-  /// has loaded. Override it if you serve glyphs under a different font name.
-  final List<String> symbolFontNames;
+  /// See [BaatoMapStyle.fontNames] for why this exists.
+  final List<String>? symbolFontNames;
 
   /// Renders the Android map on a TextureView instead of a SurfaceView.
   ///
@@ -283,17 +281,22 @@ class BaatoMap extends StatelessWidget {
   ///
   /// Must run after the style has loaded, since the annotation managers only
   /// exist from that point on. See [symbolFontNames] for why this is needed.
-  Future<void> _applySymbolFontStack() async {
+  Future<void> _applySymbolFontStack(BaatoMapStyle activeStyle) async {
+    final fontNames = symbolFontNames ?? activeStyle.fontNames;
+    // Unknown stack (typically a custom style): leave maplibre's default alone
+    // rather than forcing a guess that could break a style which works today.
+    if (fontNames == null || fontNames.isEmpty) return;
+
     try {
       final libreController = controller.libreController;
       final layerIds = libreController?.symbolManager?.layerIds ?? const [];
       for (final layerId in layerIds) {
         await libreController!.setLayerProperties(
           layerId,
-          _TextFontProperties(symbolFontNames),
+          _TextFontProperties(fontNames),
         );
       }
-      debugPrint('[BaatoMaps] symbol font stack set to $symbolFontNames');
+      debugPrint('[BaatoMaps] symbol font stack set to $fontNames');
     } on Exception catch (e) {
       debugPrint('[BaatoMaps] failed to set symbol font stack: $e');
     }
@@ -440,7 +443,7 @@ class BaatoMap extends StatelessWidget {
             onStyleLoadedCallback: () async {
               onStyleLoadedCallback?.call();
               await _addDefaultAssets();
-              await _applySymbolFontStack();
+              await _applySymbolFontStack(style);
               _poiLayers = await findPOILayers(poiLayerContainIds);
               controller.setPOILayers(_poiLayers);
             },
