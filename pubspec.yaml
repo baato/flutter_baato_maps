@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   maplibre_gl: ^0.24.1
   baato_api: ^2.0.1
-  path_provider: ^2.1.5
-  path: ^1.8.3
+  path_provider: ^2.1.6
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:
