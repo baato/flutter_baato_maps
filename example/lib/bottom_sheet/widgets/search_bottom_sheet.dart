@@ -114,6 +114,14 @@ class _SearchBottomSheetWidgetState extends State<SearchBottomSheetWidget> {
               }
             },
             onPlaceDetailsRetrieved: (place) {
+              // BaatoSearchPlace carries no coordinates, so the marker is
+              // dropped here, from the resolved place details.
+              BaatoMapView.mapController.markerManager.addMarker(
+                BaatoSymbolOption(
+                  geometry: place.centroid,
+                  textField: place.name,
+                ),
+              );
               BaatoMapView.mapController.cameraManager.moveTo(
                 BaatoCoordinate(
                   latitude: place.centroid.latitude,
