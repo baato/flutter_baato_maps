@@ -66,6 +66,7 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.circle,
       AnnotationType.symbol,
     ],
+    this.translucentTextureSurface = true,
     @Deprecated("Use onMapClick instead. This would be removed in next Update")
     this.onTap,
     @Deprecated(
@@ -74,6 +75,18 @@ class BaatoMap extends StatelessWidget {
   }) {
     controller.changeStyle(style: style);
   }
+
+  /// Renders the Android map on a TextureView instead of a SurfaceView.
+  ///
+  /// Defaults to true to preserve the rendering behaviour of maplibre_gl
+  /// 0.24.1, which always enabled texture mode. From 0.26.0 onwards texture
+  /// mode is off by default, and the resulting SurfaceView does not composite
+  /// correctly beneath animating Flutter widgets — a map overlaid by an
+  /// animating sheet or dialog flashes black for the duration of the
+  /// animation.
+  ///
+  /// Set to false to opt into the upstream 0.26.x SurfaceView behaviour.
+  final bool translucentTextureSurface;
 
   /// The initial geographic position of the map's center.
   final BaatoCoordinate initialPosition;
@@ -330,6 +343,7 @@ class BaatoMap extends StatelessWidget {
           body: MapLibreMap(
             key: const ValueKey("Baato Maps"),
             initialCameraPosition: cameraPosition,
+            translucentTextureSurface: translucentTextureSurface,
             styleString: style.styleURL,
             myLocationEnabled: myLocationEnabled,
             onMapCreated: (libreController) async {
