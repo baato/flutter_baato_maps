@@ -1,9 +1,9 @@
 PODS:
   - Flutter (1.0.0)
-  - MapLibre (6.19.1)
-  - maplibre_gl (0.24.1):
+  - MapLibre (6.27.0)
+  - maplibre_gl (0.26.2):
     - Flutter
-    - MapLibre (= 6.19.1)
+    - MapLibre (= 6.27.0)
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
@@ -32,8 +32,8 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  MapLibre: 7f24faba45439f80ccb0f83393c29fa32cb81952
-  maplibre_gl: d83126f1b19adee5e1071c453b421efd5fc99883
+  MapLibre: 96726270455ffd183688cf0bd2a3881b0212a57e
+  maplibre_gl: 6bd5bd04d37056c0b6b652b854196ff82e5b0e0c
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
   path_provider_foundation: bb55f6dbba17d0dccd6737fe6f7f34fbd0376880
 
