@@ -67,6 +67,7 @@ class BaatoMap extends StatelessWidget {
       AnnotationType.symbol,
     ],
     this.translucentTextureSurface = true,
+    this.symbolFontNames = const ["OpenSans"],
     @Deprecated("Use onMapClick instead. This would be removed in next Update")
     this.onTap,
     @Deprecated(
@@ -75,6 +76,18 @@ class BaatoMap extends StatelessWidget {
   }) {
     controller.changeStyle(style: style);
   }
+
+  /// The font stack used for symbol (marker) labels.
+  ///
+  /// maplibre_gl 0.26.0 stopped honouring the per-symbol `fontNames` and
+  /// hardcoded its annotation layers to `["Open Sans Regular", "Arial Unicode
+  /// MS Regular"]`. Baato's glyph endpoint serves `OpenSans`, so those requests
+  /// 404/403 and — because a symbol carrying a `textField` cannot build without
+  /// its glyphs — the whole symbol fails to draw, icon included.
+  ///
+  /// This stack is re-applied to the symbol annotation layers once the style
+  /// has loaded. Override it if you serve glyphs under a different font name.
+  final List<String> symbolFontNames;
 
   /// Renders the Android map on a TextureView instead of a SurfaceView.
   ///
@@ -252,10 +265,38 @@ class BaatoMap extends StatelessWidget {
   ///
   /// This includes the default Baato marker icon
   Future<void> _addDefaultAssets() async {
-    final ByteData bytes = await rootBundle.load(
-      BaatoMarker.baatoDefault.assetPath,
-    );
-    await addImageFromData("baato_marker", bytes);
+    try {
+      final ByteData bytes = await rootBundle.load(
+        BaatoMarker.baatoDefault.assetPath,
+      );
+      await addImageFromData("baato_marker", bytes);
+      debugPrint('[BaatoMaps] registered default marker image "baato_marker"');
+    } on Exception catch (e) {
+      // Surfaced rather than swallowed: this runs inside an async style-loaded
+      // callback whose Future nothing awaits, so a throw here would otherwise
+      // disappear and every symbol would silently render without its icon.
+      debugPrint('[BaatoMaps] failed to register default marker image: $e');
+    }
+  }
+
+  /// Re-applies [symbolFontNames] to the symbol annotation layers.
+  ///
+  /// Must run after the style has loaded, since the annotation managers only
+  /// exist from that point on. See [symbolFontNames] for why this is needed.
+  Future<void> _applySymbolFontStack() async {
+    try {
+      final libreController = controller.libreController;
+      final layerIds = libreController?.symbolManager?.layerIds ?? const [];
+      for (final layerId in layerIds) {
+        await libreController!.setLayerProperties(
+          layerId,
+          _TextFontProperties(symbolFontNames),
+        );
+      }
+      debugPrint('[BaatoMaps] symbol font stack set to $symbolFontNames');
+    } on Exception catch (e) {
+      debugPrint('[BaatoMaps] failed to set symbol font stack: $e');
+    }
   }
 
   /// Adds an image to the map from binary data
@@ -399,6 +440,7 @@ class BaatoMap extends StatelessWidget {
             onStyleLoadedCallback: () async {
               onStyleLoadedCallback?.call();
               await _addDefaultAssets();
+              await _applySymbolFontStack();
               _poiLayers = await findPOILayers(poiLayerContainIds);
               controller.setPOILayers(_poiLayers);
             },
@@ -423,4 +465,21 @@ class BaatoMap extends StatelessWidget {
       },
     );
   }
+}
+
+/// A [LayerProperties] that carries nothing but `text-font`.
+///
+/// [MapLibreMapController.setLayerProperties] serialises with
+/// `skipNulls: false`, so passing a regular `SymbolLayerProperties` would send
+/// every unset property as null and reset the annotation layer's data-driven
+/// expressions. Emitting a single key keeps the update genuinely partial.
+class _TextFontProperties implements LayerProperties {
+  const _TextFontProperties(this.textFont);
+
+  final List<String> textFont;
+
+  @override
+  Map<String, dynamic> toJson({bool skipNulls = true}) => {
+        'text-font': textFont,
+      };
 }
