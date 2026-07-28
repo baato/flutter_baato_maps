@@ -19,7 +19,7 @@ abstract class MarkerManager {
   /// which can be used to update or remove the marker later.
   Future<Symbol> addMarker(
     BaatoSymbolOption option, {
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   });
 
   /// Removes all markers from the map.

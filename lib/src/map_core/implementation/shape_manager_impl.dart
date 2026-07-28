@@ -74,7 +74,7 @@ class ShapeManagerImpl implements ShapeManager{
     BaatoCoordinate startPoint,
     BaatoCoordinate endPoint, {
     BaatoLineOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   }) async {
     final lineOptions =
         (options ?? BaatoLineOptions()).toLineOptions([startPoint, endPoint]);
@@ -94,7 +94,7 @@ class ShapeManagerImpl implements ShapeManager{
   Future<Line> addMultiLine(
     List<BaatoCoordinate> points, {
     BaatoLineOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   }) async {
     if (points.length <= 2) {
       throw ArgumentError('Points must have at least 3 coordinates');
@@ -134,7 +134,7 @@ class ShapeManagerImpl implements ShapeManager{
   @override
   Future<Circle> addCircle(
     BaatoCircleOptions options, {
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   }) async {
     final circleOptions = options.toCircleOptions();
     return await _mapLibreMapController.addCircle(circleOptions, data);
@@ -172,7 +172,7 @@ class ShapeManagerImpl implements ShapeManager{
   Future<Fill> addFill(
     List<BaatoCoordinate> points, {
     BaatoFillOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   }) async {
     final fillOptions = (options ?? BaatoFillOptions()).toFillOptions([points]);
     return await _mapLibreMapController.addFill(fillOptions, data);
@@ -190,7 +190,7 @@ class ShapeManagerImpl implements ShapeManager{
   Future<Fill> addMultiFill(
     List<List<BaatoCoordinate>> points, {
     BaatoFillOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   }) async {
     final fillOptions = (options ?? BaatoFillOptions()).toFillOptions(points);
     return await _mapLibreMapController.addFill(fillOptions, data);
@@ -309,7 +309,7 @@ class ShapeManagerImpl implements ShapeManager{
   Future<Circle> addCircleWithId(
     String shapeId,
     BaatoCircleOptions options, {
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   }) async {
     final circle = await addCircle(options, data: data);
     _circleIds[shapeId] = circle;

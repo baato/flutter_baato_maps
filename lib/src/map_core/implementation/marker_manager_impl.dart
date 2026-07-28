@@ -14,7 +14,7 @@ class MarkerManagerImpl implements MarkerManager{
 
   @override
   Future<Symbol> addMarker(BaatoSymbolOption option,
-      {Map<dynamic, dynamic>? data}) async {
+      {Map<String, dynamic>? data}) async {
     option = option.copyWith(
         iconOffset: option.iconOffset ?? const Offset(0, -10),
         textOffset: option.textOffset ?? const Offset(0, 0.8));

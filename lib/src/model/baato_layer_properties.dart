@@ -904,13 +904,12 @@ class BaatoSymbolLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent('icon-opacity', iconOpacity);
@@ -1229,13 +1228,12 @@ class BaatoCircleLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent('circle-radius', circleRadius);
@@ -1533,13 +1531,12 @@ class BaatoLineLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent('line-opacity', lineOpacity);
@@ -1720,13 +1717,12 @@ class BaatoFillLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent('fill-antialias', fillAntialias);
@@ -1902,13 +1898,12 @@ class BaatoFillExtrusionLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent('fill-extrusion-opacity', fillExtrusionOpacity);
@@ -2080,13 +2075,12 @@ class BaatoRasterLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent('raster-opacity', rasterOpacity);
@@ -2231,13 +2225,12 @@ class BaatoHillshadeLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent(
@@ -2361,13 +2354,12 @@ class BaatoHeatmapLayerProperties implements BaatoLayerProperties {
   }
 
   @override
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson({bool skipNulls = true}) {
     final Map<String, dynamic> json = <String, dynamic>{};
 
     void addIfPresent(String fieldName, dynamic value) {
-      if (value != null) {
-        json[fieldName] = value;
-      }
+      if (value == null && skipNulls) return;
+      json[fieldName] = value;
     }
 
     addIfPresent('heatmap-radius', heatmapRadius);

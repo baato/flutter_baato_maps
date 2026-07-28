@@ -39,7 +39,7 @@ abstract class ShapeManager {
     BaatoCoordinate startPoint,
     BaatoCoordinate endPoint, {
     BaatoLineOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   });
 
   /// Adds a multi-point line to the map.
@@ -48,7 +48,7 @@ abstract class ShapeManager {
   Future<Line> addMultiLine(
     List<BaatoCoordinate> points, {
     BaatoLineOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   });
 
   /// Removes a line from the map.
@@ -62,7 +62,7 @@ abstract class ShapeManager {
   /// Returns the created [Circle] object.
   Future<Circle> addCircle(
     BaatoCircleOptions options, {
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   });
 
   /// Removes a circle from the map.
@@ -77,7 +77,7 @@ abstract class ShapeManager {
   Future<Fill> addFill(
     List<BaatoCoordinate> points, {
     BaatoFillOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   });
 
   /// Adds a multi-polygon fill to the map.
@@ -86,7 +86,7 @@ abstract class ShapeManager {
   Future<Fill> addMultiFill(
     List<List<BaatoCoordinate>> points, {
     BaatoFillOptions? options,
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   });
 
   /// Removes a fill from the map.
@@ -128,7 +128,7 @@ abstract class ShapeManager {
   Future<Circle> addCircleWithId(
     String shapeId,
     BaatoCircleOptions options, {
-    Map<dynamic, dynamic>? data,
+    Map<String, dynamic>? data,
   });
 
   /// Removes a line from the map with a specific shape ID.
