@@ -19,10 +19,21 @@ A comprehensive Flutter package for integrating Baato Maps into your application
 ## Requirements
 
 ### Android
-- **Java 21**: This package requires Java 21 for Android development due to dependencies on MapLibre GL 0.24.1.
+- **Java 21**: This package requires Java 21 for Android development, because MapLibre GL 0.26.2 compiles against Java 21. Building with an older JDK fails with:
+
+  ```
+  Execution failed for task ':maplibre_gl:compileDebugJavaWithJavac'.
+  > error: invalid source release: 21
+  ```
+
   - You can download Java 21 from [Oracle](https://www.oracle.com/java/technologies/javase/jdk21-archive-downloads.html) or use [OpenJDK 21](https://openjdk.org/projects/jdk/21/)
   - If using a Java version manager (like jenv, sdkman, or asdf), make sure to set Java 21 as your active version for this project
   - Set `JAVA_HOME` environment variable to point to your Java 21 installation
+  - **`JAVA_HOME` alone is not always enough.** Flutter keeps its own JDK setting, which takes precedence over `JAVA_HOME`. Check which JDK it is actually using with `flutter doctor -v` and, if it is not 21, point it at the right one:
+
+    ```bash
+    flutter config --jdk-dir="/path/to/jdk-21"
+    ```
 
 ### iOS
 - **iOS 14.0+**: Minimum deployment target is iOS 14.0
