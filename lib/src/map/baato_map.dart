@@ -293,7 +293,7 @@ class BaatoMap extends StatelessWidget {
       for (final layerId in layerIds) {
         await libreController!.setLayerProperties(
           layerId,
-          _TextFontProperties(fontNames),
+          PartialLayerProperties(SymbolLayerProperties(textFont: fontNames)),
         );
       }
       debugPrint('[BaatoMaps] symbol font stack set to $fontNames');
@@ -468,21 +468,4 @@ class BaatoMap extends StatelessWidget {
       },
     );
   }
-}
-
-/// A [LayerProperties] that carries nothing but `text-font`.
-///
-/// [MapLibreMapController.setLayerProperties] serialises with
-/// `skipNulls: false`, so passing a regular `SymbolLayerProperties` would send
-/// every unset property as null and reset the annotation layer's data-driven
-/// expressions. Emitting a single key keeps the update genuinely partial.
-class _TextFontProperties implements LayerProperties {
-  const _TextFontProperties(this.textFont);
-
-  final List<String> textFont;
-
-  @override
-  Map<String, dynamic> toJson({bool skipNulls = true}) => {
-        'text-font': textFont,
-      };
 }

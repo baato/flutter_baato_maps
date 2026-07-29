@@ -48,7 +48,7 @@ class GeoJsonManagerImpl implements GeoJsonManager{
       } else if (updateIfLayerExist) {
         await _mapLibreMapController.setLayerProperties(
           layerId,
-          geojson.properties!,
+          PartialLayerProperties(geojson.properties!),
         );
       }
     }

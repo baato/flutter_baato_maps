@@ -79,7 +79,10 @@ class RouteManagerImpl implements RouteManager{
 
     final isLayerExists = await _sourceAndLayerManager.layerExists(layerId);
     if (isLayerExists) {
-      _mapLibreMapController.setLayerProperties(layerId, lineLayerProperties);
+      _mapLibreMapController.setLayerProperties(
+        layerId,
+        PartialLayerProperties(lineLayerProperties),
+      );
     } else {
       _mapLibreMapController.addLayer(
         sourceId,

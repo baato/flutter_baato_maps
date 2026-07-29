@@ -64,7 +64,7 @@ class SourceAndLayerManagerImpl implements SourceAndLayerManager{
   ) async {
     await _mapLibreMapController.setLayerProperties(
       layerId,
-      layerProperties,
+      PartialLayerProperties(layerProperties),
     );
   }
 

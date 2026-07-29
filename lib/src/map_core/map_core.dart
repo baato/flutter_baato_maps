@@ -2,6 +2,7 @@ export 'camera_manager.dart';
 export 'coordinate_converter.dart';
 export 'geo_json_manager.dart';
 export 'marker_manager.dart';
+export 'partial_layer_properties.dart';
 export 'route_manager.dart';
 export 'shape_manager.dart';
 export 'source_and_layer_manager.dart';
