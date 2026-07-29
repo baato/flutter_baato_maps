@@ -1,3 +1,13 @@
+## 2.0.1
+
+### **Bug Fixes**
+- Symbols no longer disappear when a symbol layer's properties are updated. `maplibre_gl` 0.26.0 changed `MapLibreMapController.setLayerProperties` to serialise with `skipNulls: false`, so a partially-populated `LayerProperties` — the normal way to change a single property — is sent with every *unset* property as an explicit null, and the platform side applies those nulls to the live layer. On an annotation layer that clears the data-driven expressions the annotation manager installed, `icon-image` among them; with no icon left to draw, every symbol on the layer vanishes, not just the one being restyled. Layer property updates issued through `sourceAndLayerManager.updateLayerProperties`, `geoJsonManager`, and `routeManager` now send only the properties actually set
+- Symbols were most visibly lost on maps that combine static markers with a marker that is restyled while it animates, because both live on the same annotation layer. Adding and updating symbols was never the trigger
+
+### **Notes**
+- Calling `libreController.setLayerProperties` directly still hits the upstream `skipNulls: false` behaviour. Prefer `controller.sourceAndLayerManager.updateLayerProperties` with the `Baato*LayerProperties` types
+- `example/lib/symbol_layer_regression_screen.dart` reproduces the failure and demonstrates the fix, with a toggle between the safe and unsafe update paths
+
 ## 2.0.0
 
 ### **BREAKING**
