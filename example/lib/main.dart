@@ -1,4 +1,5 @@
 import 'package:example/map_screen.dart';
+import 'package:example/symbol_layer_regression_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:baato_maps/baato_maps.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -42,6 +43,18 @@ class MyMapPage extends StatefulWidget {
 class _MyMapPageState extends State<MyMapPage> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(body: MapScreen());
+    return Scaffold(
+      body: const MapScreen(),
+      floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'symbol_layer_regression',
+        label: const Text('Symbol regression'),
+        icon: const Icon(Icons.bug_report_outlined),
+        onPressed: () => Navigator.of(context).push(
+          MaterialPageRoute<void>(
+            builder: (_) => const SymbolLayerRegressionScreen(),
+          ),
+        ),
+      ),
+    );
   }
 }
